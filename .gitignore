@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS
+.DS_Store
+.vscode/
+*.log
+
+# Data files (if sensitive)
+# Uncomment if you don't want to include data files
+# data/
+# *.xlsx 
