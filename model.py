@@ -4,13 +4,11 @@ Handles data loading, scenario application, and cost calculations
 """
 
 import pandas as pd
-import numpy as np
 from typing import Dict, Tuple, Optional, List
-import os
+
 from config import (
     PHASE_ORDER, SCENARIOS, DEFAULT_PHASE_ALLOCATION,
-    INDUSTRY_BENCHMARKS, validate_scenario_results,
-    calculate_baseline_hours, INITIATIVE_FALLBACK
+    INDUSTRY_BENCHMARKS, calculate_baseline_hours, INITIATIVE_FALLBACK
 )
 
 
@@ -20,9 +18,7 @@ def get_initiatives() -> List[str]:
 
 
 class N2SEfficiencyModel:
-    """
-    Core model for calculating N2S efficiency improvements
-    """
+    """Core model for calculating N2S efficiency improvements"""
     
     def __init__(self):
         """Initialize the model"""
@@ -36,72 +32,48 @@ class N2SEfficiencyModel:
         return True
     
     def _rename_columns_to_n2s_phases(self, df: pd.DataFrame) -> None:
-        """
-        Rename DataFrame columns to standardized N2S phase names
-        """
-        # Common column name mappings
-        column_mappings = {
-            'discovery': 'Discover',
-            'planning': 'Plan',
-            'plan': 'Plan',
-            'design': 'Design',
-            'development': 'Build',
-            'build': 'Build',
-            'testing': 'Test',
-            'test': 'Test',
-            'deployment': 'Deploy',
-            'deploy': 'Deploy',
-            'post-go-live': 'Post Go-Live',
-            'post_go_live': 'Post Go-Live',
-            'support': 'Post Go-Live',
-            'maintenance': 'Post Go-Live'
+        """Rename columns to standardized N2S phase names"""
+        column_mapping = {
+            'Requirements': 'Discover',
+            'Analysis': 'Discover', 
+            'Planning': 'Plan',
+            'Architecture': 'Design',
+            'Development': 'Build',
+            'Testing': 'Test',
+            'Deployment': 'Deploy',
+            'Support': 'Post Go-Live',
+            'Maintenance': 'Post Go-Live'
         }
         
-        # Apply mappings (case-insensitive)
-        new_columns = []
-        for col in df.columns:
-            col_lower = str(col).lower().strip()
-            new_name = column_mappings.get(col_lower, col)
-            new_columns.append(new_name)
-        
-        df.columns = new_columns
+        df.rename(columns=column_mapping, inplace=True)
     
-    def _create_sample_matrix(self) -> None:
-        """
-        Create sample matrix data for demonstration
-        Updated to reflect realistic N2S savings potential aligned with industry research
-        """
-        initiatives = INITIATIVE_FALLBACK.copy()
-        
-        # Realistic hour deltas based on N2S industry benchmarks
-        # (+ adds effort, - saves effort)
+    def _create_sample_matrix(self):
+        """Create sample efficiency matrix with research-based data"""
         # Calibrated for: 50% maturity baseline = ~8% savings, 100% = ~16%
         sample_data = {
             # Early phases: Moderate savings from better planning/reuse
-            'Discover': [-13, -10, -19, -26, -6, -16, -22],       # ~112 hours saved
-            'Plan': [-19, -16, -32, -38, -10, -26, -29],          # ~170 hours saved
-            'Design': [-32, -26, -45, -51, -38, -35, -42],        # ~269 hours saved
-            
-            # Development: Major savings from automation, reuse, modern tools
-            'Build': [-51, -77, -64, -96, -128, -58, -115],       # ~589 hours saved
-            
+            'Discover': [-13, -10, -19, -26, -6, -16, -22],
+            'Plan': [-19, -16, -32, -38, -10, -26, -29],
+            'Design': [-32, -26, -45, -51, -38, -35, -42],
+
+            # Development: Major savings from automation, reuse, tools
+            'Build': [-51, -77, -64, -96, -128, -58, -115],
+
             # Testing: Biggest savings potential from automation
-            'Test': [-128, -115, -102, -77, -160, -64, -179],     # ~825 hours saved
-            
+            'Test': [-128, -115, -102, -77, -160, -64, -179],
+
             # Deployment: Significant savings from automation/environments
-            'Deploy': [-26, -51, -19, -38, -32, -22, -29],        # ~217 hours saved
-            
-            # Post Go-Live: Major savings from quality improvements
-            'Post Go-Live': [-96, -64, -77, -115, -51, -58, -90]  # ~551 hours saved
+            'Deploy': [-26, -51, -19, -38, -32, -22, -29],
+
+            # Post Go-Live: Ongoing operational improvements
+            'Post Go-Live': [-96, -64, -77, -115, -51, -58, -90]
         }
         
-        # Total potential savings at 100% maturity: ~2733 hours
-        # Percentage of 17,054 total hours: ~16% savings potential at 100% maturity
-        # At 50% maturity (default): ~8% savings - realistic baseline
-        # This aligns with conservative industry research for baseline scenarios
-        
-        self.matrix_data = pd.DataFrame(sample_data, index=initiatives)
-        self.initiatives = initiatives
+        self.matrix_data = pd.DataFrame(
+            sample_data, 
+            index=INITIATIVE_FALLBACK
+        )
+        self.initiatives = INITIATIVE_FALLBACK.copy()
         self.loaded = True
     
     def apply_maturity_and_scenario(

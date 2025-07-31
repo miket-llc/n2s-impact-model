@@ -63,8 +63,8 @@ def create_sidebar_controls():
     from config import (
         get_initiative_description, get_maturity_description,
         RISK_LEVEL_DEFINITIONS, get_phase_risk_info,
-        get_risk_level_description,
-        INITIATIVE_FALLBACK, INDUSTRY_BENCHMARKS
+        get_risk_level_description, INITIATIVE_FALLBACK, 
+        INDUSTRY_BENCHMARKS
     )
     
     st.sidebar.title("Model Parameters")
@@ -73,10 +73,7 @@ def create_sidebar_controls():
     from config import APP_VERSION
     st.sidebar.caption(f"{APP_VERSION}")
     
-    # =============================================================================
-    # PROJECT BASICS
-    # =============================================================================
-    
+    # Project Basics
     st.sidebar.subheader("Project Basics")
     
     total_hours = st.sidebar.number_input(
@@ -100,10 +97,7 @@ def create_sidebar_controls():
         )
     )
     
-    # =============================================================================
-    # MAJOR MODELING DECISIONS
-    # =============================================================================
-    
+    # Major Modeling Decisions
     st.sidebar.subheader("Major Modeling Decisions")
     
     scenario = st.sidebar.selectbox(
@@ -122,10 +116,7 @@ def create_sidebar_controls():
     
     cost_avoidance_config = COST_AVOIDANCE_OPTIONS[cost_avoidance_selection]
     
-    # =============================================================================
-    # PHASE ALLOCATION
-    # =============================================================================
-    
+    # Phase Allocation
     st.sidebar.subheader("Phase Time Allocation")
     st.sidebar.markdown("**Adjust based on your project type:**")
     
@@ -152,10 +143,7 @@ def create_sidebar_controls():
         )
         st.sidebar.info("Adjust the sliders above so they total exactly 100%")
     
-    # =============================================================================
-    # INDUSTRY BENCHMARKS
-    # =============================================================================
-    
+    # Industry Benchmarks
     st.sidebar.subheader("Industry Benchmarks")
     st.sidebar.markdown("""
     **Adjust these benchmarks based on your organization's current automation maturity:**
@@ -267,10 +255,7 @@ testing cycles with proper automation.
         'defect_fix_cost_multipliers': INDUSTRY_BENCHMARKS['defect_fix_cost_multipliers']
     }
     
-    # =============================================================================
-    # INITIATIVE MATURITY LEVELS  
-    # =============================================================================
-    
+    # Initiative Maturity Levels  
     st.sidebar.subheader("Initiative Maturity Levels")
     
     # First, set all initiatives to default values for enabled ones
@@ -278,10 +263,7 @@ testing cycles with proper automation.
     for initiative in INITIATIVE_FALLBACK:
         maturity_levels[initiative] = 50  # Default all to 50% for now
     
-    # =============================================================================
-    # RISK ASSESSMENT
-    # =============================================================================
-    
+    # Risk Assessment
     st.sidebar.subheader("Risk Assessment")
     
     # General risk information
@@ -314,10 +296,7 @@ testing cycles with proper automation.
         risk_level_desc = get_risk_level_description(risk_weights[phase])
         st.sidebar.caption(f"{risk_level_desc}")
     
-    # =============================================================================
-    # INITIATIVE SELECTION & WEIGHTS (MOVED TO END)
-    # =============================================================================
-    
+    # Initiative Selection
     st.sidebar.subheader("Initiative Selection")
     st.sidebar.markdown("**Select which N2S initiatives your organization has access to:**")
     

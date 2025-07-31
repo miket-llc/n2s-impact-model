@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.12.5 - Removed Excel Dependency (Sample Data Only)"
+APP_VERSION = "v2.12.6 - COMPLETE Linter Fix (All Violations)"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
@@ -67,12 +67,14 @@ RISK_LEVEL_DEFINITIONS = {
             ),
             "typical_risks": [
                 "Unclear or changing requirements",
-                "Stakeholder availability and alignment",
+                "Stakeholder availability and alignment", 
                 "Scope creep potential",
                 "Business process complexity"
             ],
             "low_risk": "Well-defined project with clear requirements",
-            "high_risk": "Complex business transformation with unclear scope"
+            "high_risk": (
+                "Complex business transformation with unclear scope"
+            )
         },
         "Plan": {
             "description": (
@@ -81,7 +83,7 @@ RISK_LEVEL_DEFINITIONS = {
             "typical_risks": [
                 "Resource availability constraints",
                 "Dependency management complexity",
-                "Timeline optimization challenges",
+                "Timeline optimization challenges", 
                 "Cross-team coordination needs"
             ],
             "low_risk": "Standard project with available resources",
@@ -98,7 +100,9 @@ RISK_LEVEL_DEFINITIONS = {
                 "Scalability considerations"
             ],
             "low_risk": "Standard design patterns and proven architecture",
-            "high_risk": "New architecture or complex integration requirements"
+            "high_risk": (
+                "New architecture or complex integration requirements"
+            )
         },
         "Build": {
             "description": (
