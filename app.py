@@ -68,17 +68,17 @@ def create_sidebar_controls():
         INITIATIVE_FALLBACK, INDUSTRY_BENCHMARKS
     )
     
-    st.sidebar.title("🎛️ Model Parameters")
+    st.sidebar.title("Model Parameters")
     
     # Version indicator in sidebar
     from config import APP_VERSION
-    st.sidebar.caption(f"📊 {APP_VERSION}")
+    st.sidebar.caption(f"{APP_VERSION}")
     
     # =============================================================================
     # PROJECT CONFIGURATION
     # =============================================================================
     
-    st.sidebar.subheader("🏗️ Project Configuration")
+    st.sidebar.subheader("Project Configuration")
     
     total_hours = st.sidebar.number_input(
         "Total Project Hours",
@@ -102,7 +102,7 @@ def create_sidebar_controls():
     # INITIATIVE SELECTION & WEIGHTS
     # =============================================================================
     
-    st.sidebar.subheader("🎯 Initiative Selection")
+    st.sidebar.subheader("Initiative Selection")
     st.sidebar.markdown("**Select which N2S initiatives your organization has access to:**")
     
     initiative_weights = {}
@@ -139,7 +139,7 @@ def create_sidebar_controls():
     # DEVELOPMENT EFFICIENCY SCENARIO
     # =============================================================================
     
-    st.sidebar.subheader("⚡ Development Efficiency")
+    st.sidebar.subheader("Development Efficiency")
     
     scenario = st.sidebar.selectbox(
         "Development Efficiency Scenario",
@@ -152,7 +152,7 @@ def create_sidebar_controls():
     # INITIATIVE MATURITY LEVELS
     # =============================================================================
     
-    st.sidebar.subheader("📈 Initiative Maturity Levels")
+    st.sidebar.subheader("Initiative Maturity Levels")
     
     maturity_levels = {}
     
@@ -183,11 +183,11 @@ def create_sidebar_controls():
     # INDUSTRY BENCHMARKS
     # =============================================================================
     
-    st.sidebar.subheader("🏭 Industry Benchmarks")
+    st.sidebar.subheader("Industry Benchmarks")
     st.sidebar.markdown("""
     **Adjust these benchmarks based on your organization's current automation maturity:**
     
-    📊 **Research Sources:**
+    **Research Sources:**
     - Gartner/Forrester automation studies
     - McKinsey quality improvement research  
     - Perfecto/Testlio testing efficiency reports
@@ -195,7 +195,7 @@ def create_sidebar_controls():
     """)
     
     # Testing Phase Reduction
-    st.sidebar.markdown("**🧪 Testing Automation Effectiveness**")
+    st.sidebar.markdown("**Testing Automation Effectiveness**")
     testing_reduction = st.sidebar.slider(
         "Testing Phase Time Reduction",
         min_value=0.1,
@@ -238,7 +238,7 @@ def create_sidebar_controls():
     )
     
     # Quality Improvement
-    st.sidebar.markdown("**✨ Quality & Defect Reduction**")
+    st.sidebar.markdown("**Quality & Defect Reduction**")
     quality_improvement = st.sidebar.slider(
         "Overall Quality Improvement",
         min_value=0.05,
@@ -297,7 +297,7 @@ def create_sidebar_controls():
     # PHASE ALLOCATION
     # =============================================================================
     
-    st.sidebar.subheader("⏱️ Phase Time Allocation")
+    st.sidebar.subheader("Phase Time Allocation")
     st.sidebar.markdown("**Adjust based on your project type:**")
     
     phase_allocation = {}
@@ -322,13 +322,13 @@ def create_sidebar_controls():
     # Validation
     total_allocation = sum(phase_allocation.values())
     if abs(total_allocation - 100) > 0.1:
-        st.sidebar.error(f"⚠️ Phase allocation must sum to 100% (currently {total_allocation}%)")
+        st.sidebar.error(f"Phase allocation must sum to 100% (currently {total_allocation}%)")
     
     # =============================================================================
     # RISK ASSESSMENT
     # =============================================================================
     
-    st.sidebar.subheader("⚠️ Risk Assessment")
+    st.sidebar.subheader("Risk Assessment")
     
     # General risk information
     general_risk_info = RISK_LEVEL_DEFINITIONS["general"]["description"]
@@ -358,13 +358,13 @@ def create_sidebar_controls():
         
         # Real-time risk level description
         risk_level_desc = get_risk_level_description(risk_weights[phase])
-        st.sidebar.caption(f"📊 {risk_level_desc}")
+        st.sidebar.caption(f"{risk_level_desc}")
     
     # =============================================================================
     # COST AVOIDANCE
     # =============================================================================
     
-    st.sidebar.subheader("💰 Cost Avoidance")
+    st.sidebar.subheader("Cost Avoidance")
     
     cost_avoidance_selection = st.sidebar.selectbox(
         "Cost Avoidance Model",
@@ -948,79 +948,55 @@ def main():
             """)
         
         # Initiative Maturity Guide
-        with st.expander("📚 Initiative Maturity Level Guide"):
-            from config import INITIATIVE_MATURITY_DEFINITIONS
+        with st.expander("Initiative Maturity Level Guide"):
+            st.markdown("### Initiative Definitions and Maturity Levels")
             
-            st.markdown("""
-            **Understanding Maturity Levels:**
-            
-            Maturity levels represent how well your organization has adopted each efficiency initiative:
-            - **0%**: Not implemented
-            - **25%**: Basic implementation
-            - **50%**: Standard adoption
-            - **75%**: Advanced implementation
-            - **100%**: Fully optimized
-            """)
-            
-            st.markdown("**Initiative Details:**")
-            for initiative, definitions in INITIATIVE_MATURITY_DEFINITIONS.items():
-                st.markdown(f"**{initiative}**")
-                st.markdown(f"*{definitions['description']}*")
+            for initiative in INITIATIVE_FALLBACK:
+                st.markdown(f"#### {initiative}")
+                desc = get_initiative_description(initiative)
+                st.markdown(f"**Description:** {desc}")
                 
-                col1, col2 = st.columns(2)
-                with col1:
-                    st.markdown(f"• **0%**: {definitions['0%']}")
-                    st.markdown(f"• **50%**: {definitions['50%']}")
-                with col2:
-                    st.markdown(f"• **25%**: {definitions['25%']}")
-                    st.markdown(f"• **75%**: {definitions['75%']}")
-                    st.markdown(f"• **100%**: {definitions['100%']}")
+                st.markdown("**Maturity Levels:**")
+                if initiative in INITIATIVE_MATURITY_DEFINITIONS:
+                    definitions = INITIATIVE_MATURITY_DEFINITIONS[initiative]
+                    for level, definition in definitions.items():
+                        if level != "description":  # Skip the main description
+                            st.markdown(f"- **{level}:** {definition}")
+                else:
+                    st.markdown("- **0%:** Not implemented")
+                    st.markdown("- **25%:** Initial adoption")  
+                    st.markdown("- **50%:** Regular use")
+                    st.markdown("- **75%:** Advanced implementation")
+                    st.markdown("- **100%:** Fully mature and optimized")
                 
                 st.markdown("---")
         
         # Risk Assessment Guide
-        with st.expander("⚠️ Risk Assessment Guide"):
-            from config import RISK_LEVEL_DEFINITIONS
+        with st.expander("Risk Assessment Guide"):
+            st.markdown("### Risk Level Guidelines")
             
-            st.markdown("""
-            **Understanding Risk Weights:**
+            # General risk information
+            general_info = RISK_LEVEL_DEFINITIONS["general"]
+            st.markdown(f"**Overview:** {general_info['description']}")
             
-            Risk weights multiply your modeled hours to create more conservative estimates based on project complexity and uncertainty. Use higher weights for riskier phases.
-            """)
+            st.markdown("### Risk Level Definitions")
+            for level, desc in general_info.items():
+                if level != "description":  # Skip the general description
+                    st.markdown(f"- **{level}x:** {desc}")
             
-            # General risk level guide
-            st.markdown("**Risk Level Guide:**")
-            general_risks = RISK_LEVEL_DEFINITIONS["general"]
-            col1, col2 = st.columns(2)
-            with col1:
-                st.markdown(f"• **0.5x**: {general_risks['0.5']}")
-                st.markdown(f"• **2.0x**: {general_risks['2.0']}")
-                st.markdown(f"• **5.0x**: {general_risks['5.0']}")
-            with col2:
-                st.markdown(f"• **1.0x**: {general_risks['1.0']}")
-                st.markdown(f"• **3.0x**: {general_risks['3.0']}")
-                st.markdown(f"• **7.0x**: {general_risks['7.0']}")
+            st.markdown("### Phase-Specific Risk Factors")
             
-            st.markdown("---")
-            
-            # Phase-specific risk information
-            st.markdown("**Phase-Specific Risk Factors:**")
-            phase_risks = RISK_LEVEL_DEFINITIONS["phases"]
-            
-            for phase, info in phase_risks.items():
-                st.markdown(f"**{phase} Phase**")
-                st.markdown(f"*{info['description']}*")
+            for phase in PHASE_ORDER:
+                phase_info = get_phase_risk_info(phase)
+                st.markdown(f"#### {phase}")
+                st.markdown(f"**Description:** {phase_info['description']}")
                 
-                col1, col2 = st.columns(2)
-                with col1:
-                    st.markdown("**Typical Risk Factors:**")
-                    for risk in info['typical_risks']:
-                        st.markdown(f"• {risk}")
+                st.markdown("**Typical Risk Factors:**")
+                for risk in phase_info['typical_risks']:
+                    st.markdown(f"- {risk}")
                 
-                with col2:
-                    st.markdown(f"**Low Risk Example:** {info['low_risk']}")
-                    st.markdown(f"**High Risk Example:** {info['high_risk']}")
-                
+                st.markdown(f"**Low Risk Example:** {phase_info['low_risk']}")
+                st.markdown(f"**High Risk Example:** {phase_info['high_risk']}")
                 st.markdown("---")
     
     except Exception as e:

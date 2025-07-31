@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.7.2 - Industry Benchmarks + Initiative Selection (FIXED BUGS)"
+APP_VERSION = "v2.8.0 - Industry Benchmarks + Initiative Selection (NO EMOJIS)"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
@@ -424,9 +424,9 @@ def validate_scenario_results(baseline_cost: float, modeled_cost: float) -> Tupl
     cost_reduction = (baseline_cost - modeled_cost) / baseline_cost
     
     if cost_reduction > MAX_TOTAL_COST_REDUCTION:
-        warning = (f"⚠️ Total cost reduction of {format_percentage(cost_reduction * 100)} "
+        warning = (f"Total cost reduction of {format_percentage(cost_reduction * 100)} "
                   f"exceeds maximum credible limit of {format_percentage(MAX_TOTAL_COST_REDUCTION * 100)}. "
-                  f"Consider adjusting initiative maturity levels.")
+                  "Consider reducing maturity levels or choosing a more conservative scenario.")
         return False, warning
     
     return True, ""
