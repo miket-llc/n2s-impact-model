@@ -371,7 +371,15 @@ def assess_current_maturity(assessment_responses: dict) -> dict:
     
     # Fine-tune based on specific automation scores
     test_auto_boost = (assessment_responses.get('test_automation_coverage', 30) - 30) * 0.1
-    cicd_boost = (assessment_responses.get('ci_cd_maturity', 1) - 1) * 0.5
+    
+    # Convert CI/CD response to index for boost calculation
+    cicd_response = assessment_responses.get('ci_cd_maturity', 'Basic build automation')
+    cicd_options = AUTOMATION_ASSESSMENT['ci_cd_maturity']['options']
+    if cicd_response in cicd_options:
+        cicd_index = cicd_options.index(cicd_response)
+    else:
+        cicd_index = 1  # Default to basic level
+    cicd_boost = (cicd_index - 1) * 0.5
     
     adjusted_savings = level_info['typical_savings'] + test_auto_boost + cicd_boost
     realistic_max = min(max_savings, max(min_savings, adjusted_savings))
@@ -395,8 +403,13 @@ def _identify_improvement_areas(responses: dict) -> list:
             question_config = AUTOMATION_ASSESSMENT[question_key]
             if question_config['type'] == 'slider' and response < 50:
                 areas.append(question_key)
-            elif question_config['type'] == 'selectbox' and response < 2:
-                areas.append(question_key)
+            elif question_config['type'] == 'selectbox':
+                # Convert string response to index for comparison
+                options = question_config['options']
+                if response in options:
+                    response_index = options.index(response)
+                    if response_index < 2:  # First 2 levels are low
+                        areas.append(question_key)
     return areas
 
 def calculate_target_feasibility(current_maturity: dict, target_savings: float, 
