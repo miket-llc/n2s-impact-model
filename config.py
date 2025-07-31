@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.7.0 - Industry Benchmarks + Initiative Selection"
+APP_VERSION = "v2.7.1 - Industry Benchmarks + Initiative Selection (FORCED REBUILD)"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
