@@ -4,4 +4,4 @@ openpyxl>=3.1.0
 plotly>=5.15.0
 numpy>=1.24.0
 
-# Force rebuild - v2.4.0 deployment fix 
+# Force rebuild - v2.6.1 REALISTIC calibration deployment 
