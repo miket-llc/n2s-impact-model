@@ -347,9 +347,14 @@ def assess_current_maturity(assessment_responses: dict) -> dict:
                 # Normalize slider values to 0-1 scale
                 score = response / 100.0
             elif question_config['type'] == 'selectbox':
-                # Convert selectbox index to 0-1 scale
-                max_options = len(question_config['options']) - 1
-                score = response / max_options if max_options > 0 else 0
+                # Convert selectbox value to index, then to 0-1 scale
+                options = question_config['options']
+                if response in options:
+                    response_index = options.index(response)
+                    max_options = len(options) - 1
+                    score = response_index / max_options if max_options > 0 else 0
+                else:
+                    score = 0
             
             total_score += score * weight
             max_score += weight
