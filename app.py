@@ -86,6 +86,25 @@ def create_sidebar_controls():
     Adjust Industry Benchmarks to match YOUR current automation level
     """)
     
+    # Major Modeling Decisions - MOVED TO TOP
+    st.sidebar.subheader("Major Modeling Decisions")
+    
+    scenario = st.sidebar.selectbox(
+        "Development Efficiency Scenario",
+        options=list(SCENARIOS.keys()),
+        index=0,  # Default to conservative "Baseline Matrix"
+        help="Choose efficiency improvement level"
+    )
+    
+    cost_avoidance_selection = st.sidebar.selectbox(
+        "Cost Avoidance Model",
+        options=list(COST_AVOIDANCE_OPTIONS.keys()),
+        index=3,  # Default to "Moderate (2.5x)"
+        help="Additional value beyond direct savings"
+    )
+    
+    cost_avoidance_config = COST_AVOIDANCE_OPTIONS[cost_avoidance_selection]
+    
     # Project Basics
     st.sidebar.subheader("Project Basics")
     
@@ -109,25 +128,6 @@ def create_sidebar_controls():
             "(developers, testers, architects, etc.)"
         )
     )
-    
-    # Major Modeling Decisions
-    st.sidebar.subheader("Major Modeling Decisions")
-    
-    scenario = st.sidebar.selectbox(
-        "Development Efficiency Scenario",
-        options=list(SCENARIOS.keys()),
-        index=0,  # Default to conservative "Baseline Matrix"
-        help="Choose efficiency improvement level"
-    )
-    
-    cost_avoidance_selection = st.sidebar.selectbox(
-        "Cost Avoidance Model",
-        options=list(COST_AVOIDANCE_OPTIONS.keys()),
-        index=3,  # Default to "Moderate (2.5x)"
-        help="Additional value beyond direct savings"
-    )
-    
-    cost_avoidance_config = COST_AVOIDANCE_OPTIONS[cost_avoidance_selection]
     
     # Phase Allocation
     st.sidebar.subheader("Phase Time Allocation")
