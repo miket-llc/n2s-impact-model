@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v3.0.0 - CMMI-Inspired Maturity Assessment Framework"
+APP_VERSION = "v3.0.1 - CMMI Framework HOTFIX"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
