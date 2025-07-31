@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.9.1 - Getting Started Guide + Fixed Post Go-Live Slider"
+APP_VERSION = "v2.10.0 - Reorganized Sidebar for Better User Flow"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054

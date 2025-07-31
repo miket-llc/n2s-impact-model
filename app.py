@@ -75,10 +75,10 @@ def create_sidebar_controls():
     st.sidebar.caption(f"{APP_VERSION}")
     
     # =============================================================================
-    # PROJECT CONFIGURATION
+    # PROJECT BASICS
     # =============================================================================
     
-    st.sidebar.subheader("Project Configuration")
+    st.sidebar.subheader("Project Basics")
     
     total_hours = st.sidebar.number_input(
         "Total Project Hours",
@@ -97,6 +97,28 @@ def create_sidebar_controls():
         step=5,
         help="Average hourly cost across all team members (developers, testers, architects, etc.)"
     )
+    
+    # =============================================================================
+    # MAJOR MODELING DECISIONS
+    # =============================================================================
+    
+    st.sidebar.subheader("Major Modeling Decisions")
+    
+    scenario = st.sidebar.selectbox(
+        "Development Efficiency Scenario",
+        options=list(SCENARIOS.keys()),
+        index=0,  # Default to conservative "Baseline Matrix"
+        help="Choose the level of efficiency improvements to model"
+    )
+    
+    cost_avoidance_selection = st.sidebar.selectbox(
+        "Cost Avoidance Model",
+        options=list(COST_AVOIDANCE_OPTIONS.keys()),
+        index=3,  # Default to "Moderate (2.5x)"
+        help="How much additional value beyond direct development savings?"
+    )
+    
+    cost_avoidance_config = COST_AVOIDANCE_OPTIONS[cost_avoidance_selection]
     
     # =============================================================================
     # INITIATIVE SELECTION & WEIGHTS
@@ -136,19 +158,6 @@ def create_sidebar_controls():
                 initiative_weights[initiative] = 0.0
     
     # =============================================================================
-    # DEVELOPMENT EFFICIENCY SCENARIO
-    # =============================================================================
-    
-    st.sidebar.subheader("Development Efficiency")
-    
-    scenario = st.sidebar.selectbox(
-        "Development Efficiency Scenario",
-        options=list(SCENARIOS.keys()),
-        index=0,  # Default to conservative "Baseline Matrix"
-        help="Choose the level of efficiency improvements to model"
-    )
-    
-    # =============================================================================
     # INITIATIVE MATURITY LEVELS
     # =============================================================================
     
@@ -176,8 +185,6 @@ def create_sidebar_controls():
                 key=f"maturity_{initiative}"
             )
             st.sidebar.caption(caption)
-        else:
-            maturity_levels[initiative] = 0  # Disabled initiatives
     
     # =============================================================================
     # INDUSTRY BENCHMARKS
@@ -355,21 +362,6 @@ def create_sidebar_controls():
         # Real-time risk level description
         risk_level_desc = get_risk_level_description(risk_weights[phase])
         st.sidebar.caption(f"{risk_level_desc}")
-    
-    # =============================================================================
-    # COST AVOIDANCE
-    # =============================================================================
-    
-    st.sidebar.subheader("Cost Avoidance")
-    
-    cost_avoidance_selection = st.sidebar.selectbox(
-        "Cost Avoidance Model",
-        options=list(COST_AVOIDANCE_OPTIONS.keys()),
-        index=3,  # Default to "Moderate (2.5x)"
-        help="How much additional value beyond direct development savings?"
-    )
-    
-    cost_avoidance_config = COST_AVOIDANCE_OPTIONS[cost_avoidance_selection]
     
     return {
         'total_hours': total_hours,
