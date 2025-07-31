@@ -1,22 +1,19 @@
 """
 N2S Efficiency Modeling Application
-Interactive Streamlit app for quantifying professional services efficiency gains
+Interactive Streamlit app for quantifying professional services efficiency
 """
 
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import io
 from datetime import datetime
-import os
 
-from model import N2SEfficiencyModel, run_model_scenario, get_initiatives
+from model import N2SEfficiencyModel
 from config import (
-    DEFAULT_TOTAL_HOURS, DEFAULT_BLENDED_RATE, DEFAULT_PHASE_ALLOCATION,
-    DEFAULT_RISK_WEIGHTS, PHASE_ORDER, SCENARIOS, COST_AVOIDANCE_OPTIONS,
-    get_phase_colors, format_currency, format_hours, format_percentage, 
+    DEFAULT_PHASE_ALLOCATION, DEFAULT_RISK_WEIGHTS, PHASE_ORDER, SCENARIOS,
+    COST_AVOIDANCE_OPTIONS, get_phase_colors, format_currency, format_hours,
     validate_scenario_results
 )
 
@@ -26,6 +23,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
 
 def load_custom_css():
     """Load custom CSS for better styling"""
@@ -51,6 +49,7 @@ def load_custom_css():
     </style>
     """, unsafe_allow_html=True)
 
+
 @st.cache_data
 def initialize_model():
     """Initialize and cache the model instance"""
@@ -58,7 +57,9 @@ def initialize_model():
     success = model.load_matrix("data/ShiftLeft_Levers_PhaseMatrix_v3.xlsx")
     if not success:
         st.warning("Using sample data. Place ShiftLeft_Levers_PhaseMatrix_v3.xlsx in data/ folder for actual data.")
+        model.create_sample_data()
     return model
+
 
 def create_sidebar_controls():
     """Create sidebar input controls for model parameters"""
@@ -377,6 +378,7 @@ def create_sidebar_controls():
         'industry_benchmarks': custom_benchmarks
     }
 
+
 def display_kpi_metrics(kpi_summary):
     """Display key performance indicators"""
     col1, col2, col3, col4 = st.columns(4)
@@ -410,6 +412,7 @@ def display_kpi_metrics(kpi_summary):
                 kpi_summary['baseline_total_cost'] - kpi_summary['modeled_total_cost']
             )
         )
+
 
 def create_cost_breakdown_by_phase_chart(cost_results, summary_df):
     """Create detailed cost breakdown chart showing baseline, savings, and avoidance by phase"""
@@ -493,6 +496,7 @@ def create_cost_breakdown_by_phase_chart(cost_results, summary_df):
     
     return fig
 
+
 def create_phase_comparison_chart(summary_df):
     """Create side-by-side bar chart comparing baseline vs modeled hours"""
     fig = go.Figure()
@@ -536,6 +540,7 @@ def create_phase_comparison_chart(summary_df):
     
     return fig
 
+
 def create_hours_saved_chart(summary_df):
     """Create chart showing hours saved/added by phase"""
     fig = go.Figure()
@@ -566,6 +571,7 @@ def create_hours_saved_chart(summary_df):
     
     return fig
 
+
 def create_cost_breakdown_chart(cost_results):
     """Create pie chart showing cost savings vs avoidance"""
     total_savings = sum(cost_results['savings'].values())
@@ -595,6 +601,7 @@ def create_cost_breakdown_chart(cost_results):
     )
     
     return fig
+
 
 def create_variance_chart(summary_df):
     """Create variance analysis chart"""
@@ -644,6 +651,7 @@ def create_variance_chart(summary_df):
     
     return fig
 
+
 def create_initiative_impact_chart(initiative_df):
     """Create chart showing financial impact by initiative"""
     # Filter to show only initiatives with meaningful impact
@@ -679,6 +687,7 @@ def create_initiative_impact_chart(initiative_df):
     
     return fig
 
+
 def export_to_excel(summary_df, kpi_summary, cost_results, initiative_impact_df=None):
     """Export results to Excel file"""
     output = io.BytesIO()
@@ -711,6 +720,7 @@ def export_to_excel(summary_df, kpi_summary, cost_results, initiative_impact_df=
         cost_df.to_excel(writer, sheet_name='Cost Details', index=False)
     
     return output.getvalue()
+
 
 def main():
     """Main application function"""

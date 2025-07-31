@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.12.2 - Fixed All NameError Import Bugs (Complete Fix)"
+APP_VERSION = "v2.12.3 - Fixed All Linter Errors (Clean Code)"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
@@ -47,9 +47,11 @@ DEFAULT_RISK_WEIGHTS = {
 # Risk level definitions and guidelines
 RISK_LEVEL_DEFINITIONS = {
     "general": {
-        "description": ("Risk weights multiply your modeled hours to account for project "
-                       "complexity, team experience, and potential issues. Higher weights "
-                       "= more conservative estimates."),
+        "description": (
+            "Risk weights multiply your modeled hours to account for project "
+            "complexity, team experience, and potential issues. Higher weights "
+            "= more conservative estimates."
+        ),
         "0.5": "Very low risk - Simple, well-understood work",
         "1.0": "Low risk - Standard complexity, experienced team",
         "2.0": "Moderate risk - Some complexity or unknowns",
@@ -60,7 +62,9 @@ RISK_LEVEL_DEFINITIONS = {
     },
     "phases": {
         "Discover": {
-            "description": "Requirements gathering, stakeholder alignment, scope definition",
+            "description": (
+                "Requirements gathering, stakeholder alignment, scope definition"
+            ),
             "typical_risks": [
                 "Unclear or changing requirements",
                 "Stakeholder availability and alignment",
@@ -71,7 +75,9 @@ RISK_LEVEL_DEFINITIONS = {
             "high_risk": "Complex business transformation with unclear scope"
         },
         "Plan": {
-            "description": "Project planning, resource allocation, timeline development",
+            "description": (
+                "Project planning, resource allocation, timeline development"
+            ),
             "typical_risks": [
                 "Resource availability constraints",
                 "Dependency management complexity",
@@ -82,7 +88,9 @@ RISK_LEVEL_DEFINITIONS = {
             "high_risk": "Multi-team project with resource constraints"
         },
         "Design": {
-            "description": "Architecture design, technical specifications, UI/UX design",
+            "description": (
+                "Architecture design, technical specifications, UI/UX design"
+            ),
             "typical_risks": [
                 "Technical architecture complexity",
                 "Integration design challenges",
@@ -93,7 +101,9 @@ RISK_LEVEL_DEFINITIONS = {
             "high_risk": "New architecture or complex integration requirements"
         },
         "Build": {
-            "description": "Code development, component creation, feature implementation",
+            "description": (
+                "Code development, component creation, feature implementation"
+            ),
             "typical_risks": [
                 "Technical implementation complexity",
                 "Third-party integration challenges",
@@ -104,7 +114,9 @@ RISK_LEVEL_DEFINITIONS = {
             "high_risk": "Complex features with new technology stack"
         },
         "Test": {
-            "description": "Testing execution, defect resolution, quality assurance",
+            "description": (
+                "Testing execution, defect resolution, quality assurance"
+            ),
             "typical_risks": [
                 "Test environment stability",
                 "Complex test scenario coverage",
@@ -115,7 +127,9 @@ RISK_LEVEL_DEFINITIONS = {
             "high_risk": "Complex integration testing with manual processes"
         },
         "Deploy": {
-            "description": "Production deployment, release management, go-live activities",
+            "description": (
+                "Production deployment, release management, go-live activities"
+            ),
             "typical_risks": [
                 "Production environment issues",
                 "Data migration complexity",
@@ -126,7 +140,9 @@ RISK_LEVEL_DEFINITIONS = {
             "high_risk": "Complex migration with high business impact"
         },
         "Post Go-Live": {
-            "description": "Production support, issue resolution, user adoption",
+            "description": (
+                "Production support, issue resolution, user adoption"
+            ),
             "typical_risks": [
                 "Production support complexity",
                 "User adoption challenges",
