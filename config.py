@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.12.1 - Fixed NameError: INITIATIVE_FALLBACK Import Bug"
+APP_VERSION = "v2.12.2 - Fixed All NameError Import Bugs (Complete Fix)"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
