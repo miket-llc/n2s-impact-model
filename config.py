@@ -9,6 +9,9 @@ from typing import Dict, Tuple
 # PROJECT DEFAULTS
 # =============================================================================
 
+# Version tracking for deployment verification
+APP_VERSION = "v2.1.0 - Realistic N2S Savings (10-30%)"
+
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
 DEFAULT_BLENDED_RATE = 100  # $/hour

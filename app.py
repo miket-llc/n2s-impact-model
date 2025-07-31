@@ -64,6 +64,10 @@ def create_sidebar_controls(model):
     """Create all sidebar controls and return their values"""
     st.sidebar.title("Model Configuration")
     
+    # Version indicator in sidebar too
+    from config import APP_VERSION
+    st.sidebar.success(f"🚀 {APP_VERSION}")
+    
     # Basic parameters
     st.sidebar.header("Project Parameters")
     total_hours = st.sidebar.number_input(
@@ -545,6 +549,11 @@ def main():
     
     # Header
     st.title("Navigate-to-SaaS Efficiency Model")
+    
+    # Version indicator for deployment tracking
+    from config import APP_VERSION
+    st.markdown(f"**{APP_VERSION}** | *Updated: {datetime.now().strftime('%Y-%m-%d %H:%M')} UTC*")
+    
     st.markdown("""
     **Quantifying Professional Services Efficiency Gains**  
     Interactive modeling tool for Ellucian's N2S "shift-left" delivery methodology
