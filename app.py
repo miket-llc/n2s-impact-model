@@ -693,6 +693,9 @@ def create_initiative_impact_chart(initiative_df):
     if len(significant_df) == 0:
         return None
     
+    # Reverse the order so best initiatives (most negative/savings) appear at top
+    significant_df = significant_df.iloc[::-1]
+    
     fig = go.Figure()
     
     # Color code by impact (green for savings, red for costs)
