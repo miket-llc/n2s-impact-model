@@ -152,28 +152,33 @@ class N2SEfficiencyModel:
     def apply_maturity_and_scenario(
         self, 
         maturity_levels: Dict[str, float], 
-        scenario: str
+        scenario: str,
+        industry_benchmarks: Optional[Dict] = None
     ) -> pd.DataFrame:
         """
-        Apply maturity levels and scenario factors to the base matrix
+        Apply maturity levels and scenario factors to the matrix data
         
         Args:
-            maturity_levels: Dict mapping initiative names to maturity % (0-100)
-            scenario: Scenario name from SCENARIOS
+            maturity_levels: Dict mapping initiative names to maturity percentages (0-100)
+            scenario: Scenario name from SCENARIOS config
+            industry_benchmarks: Optional custom industry benchmarks, uses defaults if None
             
         Returns:
-            DataFrame with effective deltas
+            DataFrame with effective hour deltas after maturity and scenario application
         """
         if not self.loaded:
-            raise ValueError("Matrix data not loaded")
+            raise ValueError("Matrix data not loaded. Call load_matrix() first.")
         
-        # Start with base matrix (ensure float type)
-        effective_matrix = self.matrix_data.copy().astype(float)
+        # Use provided benchmarks or fall back to defaults
+        if industry_benchmarks is None:
+            industry_benchmarks = INDUSTRY_BENCHMARKS
         
-        # Apply maturity levels
-        for initiative in self.initiatives:
-            maturity = maturity_levels.get(initiative, 0) / 100.0
-            effective_matrix.loc[initiative] *= maturity
+        # Apply maturity levels (convert percentages to decimal multipliers)
+        effective_matrix = self.matrix_data.copy()
+        for initiative in effective_matrix.index:
+            if initiative in maturity_levels:
+                maturity_multiplier = maturity_levels[initiative] / 100.0
+                effective_matrix.loc[initiative] *= maturity_multiplier
         
         # Apply scenario factors
         scenario_config = SCENARIOS[scenario]
@@ -186,24 +191,24 @@ class N2SEfficiencyModel:
             # Enhanced benefits from deeper automation and process maturity
             additional_factor = scenario_config['additional_factor']
             
-            # Enhanced test automation benefits
-            test_boost = INDUSTRY_BENCHMARKS['testing_phase_reduction'] * additional_factor
+            # Enhanced test automation benefits using custom benchmarks
+            test_boost = industry_benchmarks['testing_phase_reduction'] * additional_factor
             effective_matrix['Test'] *= (1 + test_boost)
             
-            # Quality improvements affect post-release
-            quality_boost = INDUSTRY_BENCHMARKS['quality_improvement'] * additional_factor
+            # Quality improvements affect post-release using custom benchmarks
+            quality_boost = industry_benchmarks['quality_improvement'] * additional_factor
             effective_matrix['Post Go-Live'] *= (1 + quality_boost)
             
         elif scenario == 'Maximum (30% boost)':
             # Maximum credible improvements
             additional_factor = scenario_config['additional_factor']
             
-            # Enhanced test automation and shift-left benefits
-            test_boost = INDUSTRY_BENCHMARKS['testing_phase_reduction'] * additional_factor
+            # Enhanced test automation and shift-left benefits using custom benchmarks
+            test_boost = industry_benchmarks['testing_phase_reduction'] * additional_factor
             effective_matrix['Test'] *= (1 + test_boost)
             
-            # Quality improvements affect post-release
-            quality_boost = INDUSTRY_BENCHMARKS['quality_improvement'] * additional_factor
+            # Quality improvements affect post-release using custom benchmarks
+            quality_boost = industry_benchmarks['quality_improvement'] * additional_factor
             effective_matrix['Post Go-Live'] *= (1 + quality_boost)
             
             # Apply caps to prevent unrealistic savings
@@ -510,7 +515,7 @@ def run_model_scenario(
         risk_weights = DEFAULT_RISK_WEIGHTS.copy()
     
     # Run calculations
-    effective_deltas = model.apply_maturity_and_scenario(maturity_levels, scenario)
+    effective_deltas = model.apply_maturity_and_scenario(maturity_levels, scenario, None)
     baseline_hours, modeled_hours = model.calculate_phase_hours(
         total_hours, phase_allocation, effective_deltas
     )

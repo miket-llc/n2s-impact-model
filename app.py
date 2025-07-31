@@ -60,152 +60,326 @@ def initialize_model():
         st.warning("Using sample data. Place ShiftLeft_Levers_PhaseMatrix_v3.xlsx in data/ folder for actual data.")
     return model
 
-def create_sidebar_controls(model):
-    """Create all sidebar controls and return their values"""
-    st.sidebar.title("Model Configuration")
+def create_sidebar_controls():
+    """Create sidebar input controls for model parameters"""
+    from config import (
+        get_initiative_description, get_maturity_description,
+        RISK_LEVEL_DEFINITIONS, get_phase_risk_info, get_risk_level_description,
+        INITIATIVE_FALLBACK, INDUSTRY_BENCHMARKS
+    )
     
-    # Version indicator in sidebar too
+    st.sidebar.title("🎛️ Model Parameters")
+    
+    # Version indicator in sidebar
     from config import APP_VERSION
-    st.sidebar.success(f"🚀 {APP_VERSION}")
+    st.sidebar.caption(f"📊 {APP_VERSION}")
     
-    # Basic parameters
-    st.sidebar.header("Project Parameters")
+    # =============================================================================
+    # PROJECT CONFIGURATION
+    # =============================================================================
+    
+    st.sidebar.subheader("🏗️ Project Configuration")
+    
     total_hours = st.sidebar.number_input(
         "Total Project Hours",
         min_value=1000,
         max_value=100000,
-        value=DEFAULT_TOTAL_HOURS,
-        step=100,
-        help="Total estimated hours for the project"
+        value=17054,
+        step=500,
+        help="Total estimated hours for your project across all phases"
     )
     
     blended_rate = st.sidebar.number_input(
-        "Blended Labor Rate ($/hour)",
+        "Blended Hourly Rate ($)",
         min_value=50,
-        max_value=500,
-        value=DEFAULT_BLENDED_RATE,
+        max_value=300,
+        value=100,
         step=5,
-        help="Average hourly rate across all roles"
+        help="Average hourly cost across all team members (developers, testers, architects, etc.)"
     )
     
-    # Phase allocation
-    st.sidebar.header("Phase Allocation (%)")
-    st.sidebar.caption("Must sum to 100%")
+    # =============================================================================
+    # INITIATIVE SELECTION & WEIGHTS
+    # =============================================================================
     
-    phase_allocation = {}
-    for phase in PHASE_ORDER:
-        phase_allocation[phase] = st.sidebar.slider(
-            phase,
-            min_value=0,
-            max_value=50,
-            value=DEFAULT_PHASE_ALLOCATION[phase],
-            step=1,
-            help=f"Percentage of total hours allocated to {phase}"
-        )
+    st.sidebar.subheader("🎯 Initiative Selection")
+    st.sidebar.markdown("**Select which N2S initiatives your organization has access to:**")
     
-    # Validate phase allocation
-    total_allocation = sum(phase_allocation.values())
-    if abs(total_allocation - 100) > 0.1:
-        st.sidebar.error(f"Phase allocation sums to {total_allocation}%, must equal 100%")
-        return None
+    initiative_weights = {}
+    available_initiatives = []
     
-    # Initiative maturity levels
-    st.sidebar.header("Initiative Maturity Levels")
-    st.sidebar.caption("0% = Not implemented, 100% = Fully mature")
-    
-    maturity_levels = {}
-    for initiative in get_initiatives():
-        # Get the description for this initiative
-        from config import get_initiative_description, get_maturity_description
-        initiative_desc = get_initiative_description(initiative)
+    for initiative in INITIATIVE_FALLBACK:
+        col1, col2 = st.sidebar.columns([3, 1])
         
-        # Create the slider
-        maturity_value = st.sidebar.slider(
-            initiative.replace('_', ' '),
-            min_value=0,
-            max_value=100,
-            value=50,  # Back to conservative 50% default
-            step=5,
-            help=f"{initiative_desc}"
-        )
+        with col1:
+            enabled = st.checkbox(
+                initiative,
+                value=True,
+                key=f"enable_{initiative}",
+                help=get_initiative_description(initiative)
+            )
         
-        # Show current maturity level description
-        current_desc = get_maturity_description(initiative, maturity_value)
-        st.sidebar.caption(f"📊 Current level: {current_desc}")
-        
-        maturity_levels[initiative] = maturity_value
+        with col2:
+            if enabled:
+                weight = st.number_input(
+                    "Weight",
+                    min_value=0,
+                    max_value=100,
+                    value=100,
+                    step=5,
+                    key=f"weight_{initiative}",
+                    help="Relevance to your project (0-100%)"
+                )
+                initiative_weights[initiative] = weight / 100.0
+                available_initiatives.append(initiative)
+            else:
+                initiative_weights[initiative] = 0.0
     
-    # Scenario selection
-    st.sidebar.header("Scenario Selection")
+    # =============================================================================
+    # DEVELOPMENT EFFICIENCY SCENARIO
+    # =============================================================================
+    
+    st.sidebar.subheader("⚡ Development Efficiency")
+    
     scenario = st.sidebar.selectbox(
         "Development Efficiency Scenario",
         options=list(SCENARIOS.keys()),
-        index=0,  # Back to Baseline Matrix (conservative default)
-        help="Choose the development efficiency improvement scenario"
+        index=0,  # Default to conservative "Baseline Matrix"
+        help="Choose the level of efficiency improvements to model"
     )
     
-    # Show scenario description
-    scenario_desc = SCENARIOS[scenario]['description']
-    st.sidebar.info(f"**{scenario}**: {scenario_desc}")
+    # =============================================================================
+    # INITIATIVE MATURITY LEVELS
+    # =============================================================================
     
-    # Cost avoidance selection
-    cost_avoidance_option = st.sidebar.selectbox(
-        "Cost Avoidance Multiplier",
-        options=list(COST_AVOIDANCE_OPTIONS.keys()),
-        index=2,  # Default to Conservative (1.5x)
-        help="Choose the long-term cost avoidance factor"
+    st.sidebar.subheader("📈 Initiative Maturity Levels")
+    
+    maturity_levels = {}
+    for initiative in available_initiatives:
+        if initiative_weights[initiative] > 0:  # Only show enabled initiatives
+            help_text = get_maturity_description(initiative)
+            caption = f"Weight: {initiative_weights[initiative]*100:.0f}% | {help_text}"
+            
+            maturity_levels[initiative] = st.sidebar.slider(
+                f"{initiative}",
+                min_value=0,
+                max_value=100,
+                value=50,
+                step=5,
+                help=f"Current implementation maturity for {initiative}",
+                key=f"maturity_{initiative}"
+            )
+            st.sidebar.caption(caption)
+        else:
+            maturity_levels[initiative] = 0  # Disabled initiatives
+    
+    # =============================================================================
+    # INDUSTRY BENCHMARKS
+    # =============================================================================
+    
+    st.sidebar.subheader("🏭 Industry Benchmarks")
+    st.sidebar.markdown("""
+    **Adjust these benchmarks based on your organization's current automation maturity:**
+    
+    📊 **Research Sources:**
+    - Gartner/Forrester automation studies
+    - McKinsey quality improvement research  
+    - Perfecto/Testlio testing efficiency reports
+    - IBM Systems Sciences shift-left analysis
+    """)
+    
+    # Testing Phase Reduction
+    st.sidebar.markdown("**🧪 Testing Automation Effectiveness**")
+    testing_reduction = st.sidebar.slider(
+        "Testing Phase Time Reduction",
+        min_value=0.1,
+        max_value=0.8,
+        value=float(INDUSTRY_BENCHMARKS['testing_phase_reduction']),
+        step=0.05,
+        format="%.0f%%",
+        help="""How much can automated testing reduce overall testing time?
+
+**Research Base:** Perfecto/Testlio studies show 30-50% reduction in testing cycles with proper automation.
+
+**Your Context:**
+• **Legacy/Manual (20-30%)**: Heavy manual testing, minimal automation
+• **Moderate (35-50%)**: Some automation, mixed manual/automated  
+• **Advanced (55-70%)**: Comprehensive test automation suites
+• **Best-in-Class (70%+)**: AI-driven testing, full CI/CD integration
+
+**Higher values appropriate for:** Organizations transitioning from manual to automated testing
+**Lower values appropriate for:** Already automated organizations with limited additional gains"""
     )
     
-    # Show cost avoidance description
-    avoidance_desc = COST_AVOIDANCE_OPTIONS[cost_avoidance_option]['description']
-    st.sidebar.info(f"**{cost_avoidance_option}**: {avoidance_desc}")
+    # Manual Testing Reduction  
+    manual_testing_reduction = st.sidebar.slider(
+        "Manual Testing Reduction",
+        min_value=0.1,
+        max_value=0.7,
+        value=float(INDUSTRY_BENCHMARKS['manual_testing_reduction']),
+        step=0.05,
+        format="%.0f%%",
+        help="""How much manual testing effort can be eliminated through automation?
+
+**Research Base:** Industry studies show 35-45% reduction in manual testing effort.
+
+**Your Context:**
+• **High Manual (50-70%)**: Currently 80%+ manual testing
+• **Mixed (30-50%)**: 50/50 manual vs automated testing
+• **Automated (15-35%)**: Already mostly automated testing
+
+**Consider your current state:** Higher reduction rates apply to organizations with significant manual testing overhead."""
+    )
     
-    # Risk weights
-    st.sidebar.header("Risk Weight Multipliers")
-    st.sidebar.caption("Higher weights = higher risk phases")
+    # Quality Improvement
+    st.sidebar.markdown("**✨ Quality & Defect Reduction**")
+    quality_improvement = st.sidebar.slider(
+        "Overall Quality Improvement",
+        min_value=0.05,
+        max_value=0.5,
+        value=float(INDUSTRY_BENCHMARKS['quality_improvement']),
+        step=0.05,
+        format="%.0f%%",
+        help="""Overall improvement in software quality from shift-left practices.
+
+**Research Base:** McKinsey studies show 20% average quality improvement from shift-left methodologies.
+
+**Factors:**
+• **Early defect detection** through better testing
+• **Improved code quality** through better tools/processes  
+• **Reduced post-production issues** from better validation
+
+**Your Context:**
+• **High Defect Rate (30-50%)**: Currently experiencing significant quality issues
+• **Average (15-25%)**: Industry-standard quality metrics
+• **High Quality (5-15%)**: Already high-quality processes with limited improvement potential"""
+    )
     
-    # Add explanation of what risk weights do
-    from config import RISK_LEVEL_DEFINITIONS
-    st.sidebar.info(f"ℹ️ {RISK_LEVEL_DEFINITIONS['general']['description']}")
+    defect_reduction = st.sidebar.slider(
+        "Post-Release Defect Reduction", 
+        min_value=0.1,
+        max_value=0.6,
+        value=float(INDUSTRY_BENCHMARKS['post_release_defect_reduction']),
+        step=0.05,
+        format="%.0f%%",
+        help="""Reduction in post-production defects from better early-stage practices.
+
+**Research Base:** IBM studies show 25% average reduction in production defects with shift-left.
+
+**Impact Areas:**
+• **Fewer hotfixes** and emergency releases
+• **Reduced support overhead** and user escalations
+• **Lower maintenance burden** on development teams
+
+**Your Context:**
+• **High Production Issues (40-60%)**: Frequent post-release defects
+• **Moderate (20-30%)**: Occasional production issues  
+• **Stable (10-20%)**: Already low defect rates"""
+    )
+    
+    # Package the industry benchmarks
+    custom_benchmarks = {
+        'testing_phase_reduction': testing_reduction,
+        'manual_testing_reduction': manual_testing_reduction,
+        'quality_improvement': quality_improvement,
+        'post_release_defect_reduction': defect_reduction,
+        'test_automation_cost_reduction': INDUSTRY_BENCHMARKS['test_automation_cost_reduction'],
+        'defect_fix_cost_multipliers': INDUSTRY_BENCHMARKS['defect_fix_cost_multipliers']
+    }
+    
+    # =============================================================================
+    # PHASE ALLOCATION
+    # =============================================================================
+    
+    st.sidebar.subheader("⏱️ Phase Time Allocation")
+    st.sidebar.markdown("**Adjust based on your project type:**")
+    
+    phase_allocation = {}
+    remaining = 100
+    
+    for i, phase in enumerate(PHASE_ORDER):
+        if i == len(PHASE_ORDER) - 1:  # Last phase gets remainder
+            phase_allocation[phase] = remaining
+            st.sidebar.metric(f"{phase} %", f"{remaining}%")
+        else:
+            default_value = DEFAULT_PHASE_ALLOCATION[phase]
+            phase_allocation[phase] = st.sidebar.slider(
+                f"{phase} %",
+                min_value=1,
+                max_value=50,
+                value=default_value,
+                step=1,
+                help=f"Percentage of total project time spent in {phase} phase"
+            )
+            remaining -= phase_allocation[phase]
+    
+    # Validation
+    total_allocation = sum(phase_allocation.values())
+    if abs(total_allocation - 100) > 0.1:
+        st.sidebar.error(f"⚠️ Phase allocation must sum to 100% (currently {total_allocation}%)")
+    
+    # =============================================================================
+    # RISK ASSESSMENT
+    # =============================================================================
+    
+    st.sidebar.subheader("⚠️ Risk Assessment")
+    
+    # General risk information
+    general_risk_info = RISK_LEVEL_DEFINITIONS["general"]["description"]
+    st.sidebar.markdown(f"**Risk Multipliers:** {general_risk_info}")
     
     risk_weights = {}
     for phase in PHASE_ORDER:
-        # Get phase-specific risk information
-        from config import get_phase_risk_info, get_risk_level_description
         phase_info = get_phase_risk_info(phase)
+        help_text = f"""**{phase_info['description']}**
+
+**Typical Risks:**
+{chr(10).join([f"• {risk}" for risk in phase_info['typical_risks']])}
+
+**Low Risk Example:** {phase_info['low_risk']}
+**High Risk Example:** {phase_info['high_risk']}"""
         
-        # Create help text with phase description and typical risks
-        risk_bullets = "\\n• ".join(phase_info['typical_risks'])
-        help_text = (f"{phase_info['description']}\\n\\n"
-                    f"Typical risks:\\n• {risk_bullets}")
-        
-        # Create the slider
-        risk_value = st.sidebar.slider(
-            f"{phase} Risk Weight",
+        risk_weights[phase] = st.sidebar.slider(
+            f"{phase} Risk",
             min_value=0.5,
             max_value=10.0,
             value=float(DEFAULT_RISK_WEIGHTS[phase]),
             step=0.5,
-            help=help_text
+            format="%.1fx",
+            help=help_text,
+            key=f"risk_{phase}"
         )
         
-        # Show current risk level description
-        risk_desc = get_risk_level_description(risk_value)
-        st.sidebar.caption(f"⚠️ Current risk: {risk_desc}")
-        
-        risk_weights[phase] = risk_value
+        # Real-time risk level description
+        risk_level_desc = get_risk_level_description(risk_weights[phase])
+        st.sidebar.caption(f"📊 {risk_level_desc}")
     
-    # Simplified cost avoidance toggle - removed since we have the dropdown
+    # =============================================================================
+    # COST AVOIDANCE
+    # =============================================================================
+    
+    st.sidebar.subheader("💰 Cost Avoidance")
+    
+    cost_avoidance_selection = st.sidebar.selectbox(
+        "Cost Avoidance Model",
+        options=list(COST_AVOIDANCE_OPTIONS.keys()),
+        index=3,  # Default to "Moderate (2.5x)"
+        help="How much additional value beyond direct development savings?"
+    )
+    
+    cost_avoidance_config = COST_AVOIDANCE_OPTIONS[cost_avoidance_selection]
     
     return {
         'total_hours': total_hours,
         'blended_rate': blended_rate,
         'phase_allocation': phase_allocation,
         'maturity_levels': maturity_levels,
+        'initiative_weights': initiative_weights,
+        'available_initiatives': available_initiatives,
         'scenario': scenario,
-        'cost_avoidance_option': cost_avoidance_option,
         'risk_weights': risk_weights,
-        'include_cost_avoidance': True  # This is now handled by the dropdown
+        'cost_avoidance_config': cost_avoidance_config,
+        'industry_benchmarks': custom_benchmarks
     }
 
 def display_kpi_metrics(kpi_summary):
@@ -563,17 +737,18 @@ def main():
     model = initialize_model()
     
     # Create sidebar controls
-    controls = create_sidebar_controls(model)
+    controls = create_sidebar_controls()
     if controls is None:
         st.error("Please fix the phase allocation percentages in the sidebar.")
         return
     
     # Run calculations
     try:
-        # Calculate results
+        # Apply maturity and scenario with custom industry benchmarks
         effective_deltas = model.apply_maturity_and_scenario(
-            controls['maturity_levels'], 
-            controls['scenario']
+            controls['maturity_levels'],
+            controls['scenario'],
+            controls['industry_benchmarks']
         )
         
         baseline_hours, modeled_hours = model.calculate_phase_hours(
@@ -583,13 +758,13 @@ def main():
         )
         
         # Get cost avoidance configuration
-        cost_avoidance_config = COST_AVOIDANCE_OPTIONS[controls['cost_avoidance_option']]
+        cost_avoidance_config = controls['cost_avoidance_config']
         
         cost_results = model.calculate_costs_and_savings(
             baseline_hours, 
             modeled_hours, 
             controls['blended_rate'],
-            controls['include_cost_avoidance'],
+            True, # Always include cost avoidance for now
             cost_avoidance_config
         )
         
@@ -617,7 +792,7 @@ def main():
             effective_deltas,
             controls['maturity_levels'],
             controls['blended_rate'],
-            controls['include_cost_avoidance'],
+            True, # Always include cost avoidance for now
             cost_avoidance_config
         )
         
