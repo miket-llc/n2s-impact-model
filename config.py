@@ -46,17 +46,19 @@ DEFAULT_RISK_WEIGHTS = {
 # =============================================================================
 
 SCENARIOS = {
-    'Moderate (10%)': {
+    'Baseline Matrix': {
         'base_factor': 1.0,
-        'description': 'Conservative improvements using matrix at face value'
+        'description': ('Conservative improvements using matrix at face value '
+                        '(actual savings depend on your data and maturity levels)')
     },
-    'Elevated (20%)': {
+    'Enhanced (20% boost)': {
         'base_factor': 1.0,
         'additional_factor': 0.5,  # 50% additional benefits
         'description': ('Enhanced benefits from higher test automation '
-                       'and deeper reuse')
+                        'and deeper reuse - adds 50% boost to testing '
+                        'and quality improvements')
     },
-    'Aggressive (30%)': {
+    'Maximum (30% boost)': {
         'base_factor': 1.0,
         'additional_factor': 0.75,  # 75% additional benefits
         'max_savings_caps': {  # Maximum credible savings per phase
@@ -69,7 +71,8 @@ SCENARIOS = {
             'Post Go-Live': 0.75
         },
         'description': ('Near-maximum credible improvements with '
-                       'empirically defensible limits')
+                        'empirically defensible limits - adds 75% boost '
+                        'with safety caps')
     }
 }
 
