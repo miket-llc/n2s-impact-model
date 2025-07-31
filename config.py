@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.2.0 - SCENARIOS FIXED! Now delivers 10-30% savings"
+APP_VERSION = "v2.3.0 - DRAMATIC scenario differences (12% vs 20% vs 30%)"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
@@ -177,30 +177,30 @@ SCENARIOS = {
     'Baseline Matrix': {
         'base_factor': 1.0,
         'description': ('Conservative improvements using matrix at face value '
-                        '(expect 10-15% savings with moderate maturity levels)')
+                        '(expect 12-15% savings with moderate maturity levels)')
     },
     'Enhanced (20% boost)': {
         'base_factor': 1.0,
-        'additional_factor': 0.4,  # 40% additional benefits
+        'additional_factor': 1.0,  # 100% additional benefits (was 0.4)
         'description': ('Enhanced benefits from higher test automation '
-                        'and deeper reuse - adds 40% boost to testing '
-                        'and quality improvements (expect 15-25% savings)')
+                        'and deeper reuse - adds 100% boost to testing '
+                        'and quality improvements (expect 18-25% savings)')
     },
     'Maximum (30% boost)': {
         'base_factor': 1.0,
-        'additional_factor': 0.6,  # 60% additional benefits  
+        'additional_factor': 1.5,  # 150% additional benefits (was 0.6)
         'max_savings_caps': {  # Maximum credible savings per phase
-            'Discover': 0.40,
-            'Plan': 0.45,
-            'Design': 0.50,
-            'Build': 0.55,
-            'Test': 0.70,
-            'Deploy': 0.50,
-            'Post Go-Live': 0.80
+            'Discover': 0.50,
+            'Plan': 0.55,
+            'Design': 0.60,
+            'Build': 0.65,
+            'Test': 0.80,
+            'Deploy': 0.60,
+            'Post Go-Live': 0.85
         },
         'description': ('Maximum credible improvements with '
-                        'empirically defensible limits - adds 60% boost '
-                        'with safety caps (expect 20-30% savings)')
+                        'empirically defensible limits - adds 150% boost '
+                        'with safety caps (expect 25-35% savings)')
     }
 }
 
