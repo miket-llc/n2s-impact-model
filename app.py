@@ -352,7 +352,7 @@ def display_kpi_metrics(kpi_summary):
             "Total Financial Benefit",
             format_currency(kpi_summary['total_financial_benefit']),
             delta=format_currency(
-                kpi_summary['baseline_total_cost'] - kpi_summary['modeled_total_cost']
+                kpi_summary['total_baseline_cost'] - kpi_summary['total_modeled_cost']
             )
         )
 
@@ -824,8 +824,8 @@ def main():
         
         # Validate results
         is_valid, warning = validate_scenario_results(
-            kpi_summary['baseline_total_cost'],
-            kpi_summary['modeled_total_cost']
+            kpi_summary['total_baseline_cost'],
+            kpi_summary['total_modeled_cost']
         )
         
         if not is_valid:
