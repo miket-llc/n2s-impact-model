@@ -75,52 +75,6 @@ def create_sidebar_controls():
     st.sidebar.caption(f"{APP_VERSION}")
     
     # =============================================================================
-    # PROJECT BASICS
-    # =============================================================================
-    
-    st.sidebar.subheader("Project Basics")
-    
-    total_hours = st.sidebar.number_input(
-        "Total Project Hours",
-        min_value=1000,
-        max_value=100000,
-        value=17054,
-        step=500,
-        help="Total estimated hours for your project across all phases"
-    )
-    
-    blended_rate = st.sidebar.number_input(
-        "Blended Hourly Rate ($)",
-        min_value=50,
-        max_value=300,
-        value=100,
-        step=5,
-        help="Average hourly cost across all team members (developers, testers, architects, etc.)"
-    )
-    
-    # =============================================================================
-    # MAJOR MODELING DECISIONS
-    # =============================================================================
-    
-    st.sidebar.subheader("Major Modeling Decisions")
-    
-    scenario = st.sidebar.selectbox(
-        "Development Efficiency Scenario",
-        options=list(SCENARIOS.keys()),
-        index=0,  # Default to conservative "Baseline Matrix"
-        help="Choose the level of efficiency improvements to model"
-    )
-    
-    cost_avoidance_selection = st.sidebar.selectbox(
-        "Cost Avoidance Model",
-        options=list(COST_AVOIDANCE_OPTIONS.keys()),
-        index=3,  # Default to "Moderate (2.5x)"
-        help="How much additional value beyond direct development savings?"
-    )
-    
-    cost_avoidance_config = COST_AVOIDANCE_OPTIONS[cost_avoidance_selection]
-    
-    # =============================================================================
     # INITIATIVE SELECTION & WEIGHTS
     # =============================================================================
     
@@ -158,33 +112,31 @@ def create_sidebar_controls():
                 initiative_weights[initiative] = 0.0
     
     # =============================================================================
-    # INITIATIVE MATURITY LEVELS
+    # PHASE ALLOCATION
     # =============================================================================
     
-    st.sidebar.subheader("Initiative Maturity Levels")
+    st.sidebar.subheader("Phase Time Allocation")
+    st.sidebar.markdown("**Adjust based on your project type:**")
     
-    maturity_levels = {}
+    phase_allocation = {}
     
-    # First, set all initiatives to 0 (disabled by default)
-    for initiative in INITIATIVE_FALLBACK:
-        maturity_levels[initiative] = 0
+    # Show sliders for all phases
+    for phase in PHASE_ORDER:
+        default_value = DEFAULT_PHASE_ALLOCATION[phase]
+        phase_allocation[phase] = st.sidebar.slider(
+            f"{phase} %",
+            min_value=1,
+            max_value=50,
+            value=default_value,
+            step=1,
+            help=f"Percentage of total project time spent in {phase} phase"
+        )
     
-    # Then show sliders only for enabled initiatives
-    for initiative in available_initiatives:
-        if initiative_weights[initiative] > 0:  # Only show enabled initiatives
-            help_text = get_maturity_description(initiative, 50)  # Use 50% as example level
-            caption = f"Weight: {initiative_weights[initiative]*100:.0f}% | {help_text}"
-            
-            maturity_levels[initiative] = st.sidebar.slider(
-                f"{initiative}",
-                min_value=0,
-                max_value=100,
-                value=50,
-                step=5,
-                help=f"Current implementation maturity for {initiative}",
-                key=f"maturity_{initiative}"
-            )
-            st.sidebar.caption(caption)
+    # Validation
+    total_allocation = sum(phase_allocation.values())
+    if abs(total_allocation - 100) > 0.1:
+        st.sidebar.error(f"Phase allocation must sum to 100% (currently {total_allocation}%)")
+        st.sidebar.info("Adjust the sliders above so they total exactly 100%")
     
     # =============================================================================
     # INDUSTRY BENCHMARKS
@@ -301,31 +253,33 @@ def create_sidebar_controls():
     }
     
     # =============================================================================
-    # PHASE ALLOCATION
+    # INITIATIVE MATURITY LEVELS
     # =============================================================================
     
-    st.sidebar.subheader("Phase Time Allocation")
-    st.sidebar.markdown("**Adjust based on your project type:**")
+    st.sidebar.subheader("Initiative Maturity Levels")
     
-    phase_allocation = {}
+    maturity_levels = {}
     
-    # Show sliders for all phases
-    for phase in PHASE_ORDER:
-        default_value = DEFAULT_PHASE_ALLOCATION[phase]
-        phase_allocation[phase] = st.sidebar.slider(
-            f"{phase} %",
-            min_value=1,
-            max_value=50,
-            value=default_value,
-            step=1,
-            help=f"Percentage of total project time spent in {phase} phase"
-        )
+    # First, set all initiatives to 0 (disabled by default)
+    for initiative in INITIATIVE_FALLBACK:
+        maturity_levels[initiative] = 0
     
-    # Validation
-    total_allocation = sum(phase_allocation.values())
-    if abs(total_allocation - 100) > 0.1:
-        st.sidebar.error(f"Phase allocation must sum to 100% (currently {total_allocation}%)")
-        st.sidebar.info("Adjust the sliders above so they total exactly 100%")
+    # Then show sliders only for enabled initiatives
+    for initiative in available_initiatives:
+        if initiative_weights[initiative] > 0:  # Only show enabled initiatives
+            help_text = get_maturity_description(initiative, 50)  # Use 50% as example level
+            caption = f"Weight: {initiative_weights[initiative]*100:.0f}% | {help_text}"
+            
+            maturity_levels[initiative] = st.sidebar.slider(
+                f"{initiative}",
+                min_value=0,
+                max_value=100,
+                value=50,
+                step=5,
+                help=f"Current implementation maturity for {initiative}",
+                key=f"maturity_{initiative}"
+            )
+            st.sidebar.caption(caption)
     
     # =============================================================================
     # RISK ASSESSMENT
