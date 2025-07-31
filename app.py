@@ -56,7 +56,10 @@ def initialize_model():
     model = N2SEfficiencyModel()
     success = model.load_matrix("data/ShiftLeft_Levers_PhaseMatrix_v3.xlsx")
     if not success:
-        st.warning("Using sample data. Place ShiftLeft_Levers_PhaseMatrix_v3.xlsx in data/ folder for actual data.")
+        st.warning(
+            "Using sample data. Place ShiftLeft_Levers_PhaseMatrix_v3.xlsx "
+            "in data/ folder for actual data."
+        )
         model.create_sample_data()
     return model
 
@@ -65,7 +68,8 @@ def create_sidebar_controls():
     """Create sidebar input controls for model parameters"""
     from config import (
         get_initiative_description, get_maturity_description,
-        RISK_LEVEL_DEFINITIONS, get_phase_risk_info, get_risk_level_description,
+        RISK_LEVEL_DEFINITIONS, get_phase_risk_info,
+        get_risk_level_description,
         INITIATIVE_FALLBACK, INDUSTRY_BENCHMARKS
     )
     
@@ -96,7 +100,10 @@ def create_sidebar_controls():
         max_value=300,
         value=100,
         step=5,
-        help="Average hourly cost across all team members (developers, testers, architects, etc.)"
+        help=(
+            "Average hourly cost across all team members "
+            "(developers, testers, architects, etc.)"
+        )
     )
     
     # =============================================================================
@@ -145,7 +152,10 @@ def create_sidebar_controls():
     # Validation
     total_allocation = sum(phase_allocation.values())
     if abs(total_allocation - 100) > 0.1:
-        st.sidebar.error(f"Phase allocation must sum to 100% (currently {total_allocation}%)")
+        st.sidebar.error(
+            f"Phase allocation must sum to 100% "
+            f"(currently {total_allocation}%)"
+        )
         st.sidebar.info("Adjust the sliders above so they total exactly 100%")
     
     # =============================================================================
@@ -174,11 +184,12 @@ def create_sidebar_controls():
         format="%.0f%%",
         help="""How much can automated testing reduce overall testing time?
 
-**Research Base:** Perfecto/Testlio studies show 30-50% reduction in testing cycles with proper automation.
+**Research Base:** Perfecto/Testlio studies show 30-50% reduction in 
+testing cycles with proper automation.
 
 **Your Context:**
 • **Legacy/Manual (20-30%)**: Heavy manual testing, minimal automation
-• **Moderate (35-50%)**: Some automation, mixed manual/automated  
+• **Moderate (35-50%)**: Some automation, mixed manual/automated
 • **Advanced (55-70%)**: Comprehensive test automation suites
 • **Best-in-Class (70%+)**: AI-driven testing, full CI/CD integration
 

@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.12.3 - Fixed All Linter Errors (Clean Code)"
+APP_VERSION = "v2.12.4 - Major Linter Cleanup (Functional Priority)"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
@@ -192,8 +192,10 @@ def get_phase_risk_info(phase: str) -> dict:
 SCENARIOS = {
     'Baseline Matrix': {
         'base_factor': 1.0,
-        'description': ('Conservative improvements using matrix at face value '
-                        '(expect 12-15% savings with moderate maturity levels)')
+        'description': (
+            'Conservative improvements using matrix at face value '
+            '(expect 12-15% savings with moderate maturity levels)'
+        )
     },
     'Enhanced (20% boost)': {
         'base_factor': 1.0,
