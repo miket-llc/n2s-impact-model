@@ -75,6 +75,52 @@ def create_sidebar_controls():
     st.sidebar.caption(f"{APP_VERSION}")
     
     # =============================================================================
+    # PROJECT BASICS
+    # =============================================================================
+    
+    st.sidebar.subheader("Project Basics")
+    
+    total_hours = st.sidebar.number_input(
+        "Total Project Hours",
+        min_value=1000,
+        max_value=100000,
+        value=17054,
+        step=500,
+        help="Total estimated hours for your project across all phases"
+    )
+    
+    blended_rate = st.sidebar.number_input(
+        "Blended Hourly Rate ($)",
+        min_value=50,
+        max_value=300,
+        value=100,
+        step=5,
+        help="Average hourly cost across all team members (developers, testers, architects, etc.)"
+    )
+    
+    # =============================================================================
+    # MAJOR MODELING DECISIONS
+    # =============================================================================
+    
+    st.sidebar.subheader("Major Modeling Decisions")
+    
+    scenario = st.sidebar.selectbox(
+        "Development Efficiency Scenario",
+        options=list(SCENARIOS.keys()),
+        index=0,  # Default to conservative "Baseline Matrix"
+        help="Choose the level of efficiency improvements to model"
+    )
+    
+    cost_avoidance_selection = st.sidebar.selectbox(
+        "Cost Avoidance Model",
+        options=list(COST_AVOIDANCE_OPTIONS.keys()),
+        index=3,  # Default to "Moderate (2.5x)"
+        help="How much additional value beyond direct development savings?"
+    )
+    
+    cost_avoidance_config = COST_AVOIDANCE_OPTIONS[cost_avoidance_selection]
+    
+    # =============================================================================
     # INITIATIVE SELECTION & WEIGHTS
     # =============================================================================
     
