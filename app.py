@@ -1016,6 +1016,8 @@ def main():
         
         # Initiative Maturity Guide
         with st.expander("Initiative Maturity Level Guide"):
+            from config import INITIATIVE_FALLBACK, INITIATIVE_MATURITY_DEFINITIONS
+            
             st.markdown("### Initiative Definitions and Maturity Levels")
             
             for initiative in INITIATIVE_FALLBACK:
@@ -1040,6 +1042,8 @@ def main():
         
         # Risk Assessment Guide
         with st.expander("Risk Assessment Guide"):
+            from config import PHASE_ORDER
+            
             st.markdown("### Risk Level Guidelines")
             
             # General risk information
