@@ -4,4 +4,4 @@ openpyxl>=3.1.0
 plotly>=5.15.0
 numpy>=1.24.0
 
-# Force rebuild - v2.12.9b HOTFIX + complete environment refresh 
+# Force rebuild - v2.12.11 Savings-target scenarios + cache clear 

@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.12.10 - Clear Baseline Efficiency Explanation + User Guidance"
+APP_VERSION = "v2.12.11 - Business-Focused Savings Targets (10%, 20%, 30%)"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
