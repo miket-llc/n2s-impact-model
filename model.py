@@ -10,20 +10,12 @@ import os
 from config import (
     PHASE_ORDER, SCENARIOS, DEFAULT_PHASE_ALLOCATION,
     INDUSTRY_BENCHMARKS, validate_scenario_results,
-    calculate_baseline_hours, DATA_PATH, MATRIX_SHEET_NAME, INITIATIVE_FALLBACK
+    calculate_baseline_hours, INITIATIVE_FALLBACK
 )
 
 
 def get_initiatives() -> List[str]:
-    """Return list of initiative names from Excel or fallback."""
-    try:
-        if os.path.exists(DATA_PATH):
-            df = pd.read_excel(DATA_PATH, sheet_name=MATRIX_SHEET_NAME, index_col=0)
-            return df.index.tolist()
-    except Exception as e:
-        print(f"Error loading initiatives from Excel: {e}")
-    
-    # Fall back to authoritative list
+    """Return list of initiative names."""
     return INITIATIVE_FALLBACK.copy()
 
 
@@ -33,52 +25,15 @@ class N2SEfficiencyModel:
     """
     
     def __init__(self):
+        """Initialize the model"""
         self.matrix_data = None
         self.initiatives = []
         self.loaded = False
-    
-    def load_matrix(self, file_path: str, sheet_name: str = "10pct_Savings") -> bool:
-        """
-        Load the shift-left levers matrix from Excel file
         
-        Args:
-            file_path: Path to Excel file
-            sheet_name: Sheet name containing the matrix
-            
-        Returns:
-            bool: True if successful, False otherwise
-        """
-        try:
-            if not os.path.exists(file_path):
-                # Create sample data if file doesn't exist
-                self._create_sample_matrix()
-                return True
-                
-            # Load matrix from Excel
-            df = pd.read_excel(file_path, sheet_name=sheet_name, index_col=0)
-            
-            # Rename columns to N2S phases if needed
-            self._rename_columns_to_n2s_phases(df)
-            
-            # Ensure all required phases exist
-            for phase in PHASE_ORDER:
-                if phase not in df.columns:
-                    df[phase] = 0
-            
-            # Reorder columns to match phase order
-            df = df[PHASE_ORDER]
-            
-            self.matrix_data = df
-            self.initiatives = df.index.tolist()
-            self.loaded = True
-            
-            return True
-            
-        except Exception as e:
-            print(f"Error loading matrix: {e}")
-            # Fall back to sample data
-            self._create_sample_matrix()
-            return False
+    def create_sample_data(self):
+        """Create and use sample matrix data"""
+        self._create_sample_matrix()
+        return True
     
     def _rename_columns_to_n2s_phases(self, df: pd.DataFrame) -> None:
         """
@@ -501,7 +456,7 @@ def run_model_scenario(
         Tuple of (summary_table, kpi_summary)
     """
     model = N2SEfficiencyModel()
-    model.load_matrix("data/ShiftLeft_Levers_PhaseMatrix_v3.xlsx")
+    model.create_sample_data() # Changed from load_matrix to create_sample_data
     
     # Use defaults if not provided
     if phase_allocation is None:

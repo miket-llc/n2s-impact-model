@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.12.4 - Major Linter Cleanup (Functional Priority)"
+APP_VERSION = "v2.12.5 - Removed Excel Dependency (Sample Data Only)"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
@@ -276,15 +276,6 @@ INDUSTRY_BENCHMARKS = {
 
 # Maximum credible total cost reduction (updated for N2S reality)
 MAX_TOTAL_COST_REDUCTION = 0.35  # 35% for aggressive N2S implementations
-
-# =============================================================================
-# FILE PATHS  
-# =============================================================================
-
-DATA_PATH = "data/ShiftLeft_Levers_PhaseMatrix_v3.xlsx"
-EXCEL_INPUT_FILE = "data/ShiftLeft_Levers_PhaseMatrix_v3.xlsx"
-REFERENCE_FILE = "fy25q3-ps-efficiency-model-02.xlsx"
-MATRIX_SHEET_NAME = "10pct_Savings"
 
 # =============================================================================
 # INITIATIVE DEFINITIONS

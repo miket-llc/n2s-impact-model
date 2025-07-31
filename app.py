@@ -54,13 +54,7 @@ def load_custom_css():
 def initialize_model():
     """Initialize and cache the model instance"""
     model = N2SEfficiencyModel()
-    success = model.load_matrix("data/ShiftLeft_Levers_PhaseMatrix_v3.xlsx")
-    if not success:
-        st.warning(
-            "Using sample data. Place ShiftLeft_Levers_PhaseMatrix_v3.xlsx "
-            "in data/ folder for actual data."
-        )
-        model.create_sample_data()
+    model.create_sample_data()
     return model
 
 
