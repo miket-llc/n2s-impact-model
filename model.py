@@ -178,11 +178,11 @@ class N2SEfficiencyModel:
         # Apply scenario factors
         scenario_config = SCENARIOS[scenario]
         
-        if scenario == 'Moderate (10%)':
+        if scenario == 'Baseline Matrix':
             # Use matrix at face value (already applied maturity)
             pass
             
-        elif scenario == 'Elevated (20%)':
+        elif scenario == 'Enhanced (20% boost)':
             # Enhanced benefits from deeper automation and process maturity
             additional_factor = scenario_config['additional_factor']
             
@@ -194,7 +194,7 @@ class N2SEfficiencyModel:
             quality_boost = INDUSTRY_BENCHMARKS['quality_improvement'] * additional_factor
             effective_matrix['Post Go-Live'] *= (1 + quality_boost)
             
-        elif scenario == 'Aggressive (30%)':
+        elif scenario == 'Maximum (30% boost)':
             # Maximum credible improvements
             additional_factor = scenario_config['additional_factor']
             

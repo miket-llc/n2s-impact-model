@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.1.0 - Realistic N2S Savings (10-30%)"
+APP_VERSION = "v2.2.0 - SCENARIOS FIXED! Now delivers 10-30% savings"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
