@@ -73,6 +73,19 @@ def create_sidebar_controls():
     from config import APP_VERSION
     st.sidebar.caption(f"{APP_VERSION}")
     
+    # Baseline Efficiency Reminder
+    st.sidebar.info("""
+    **Your Baseline Efficiency**
+    
+    Assumes ~25% current automation:
+    • Basic unit testing & CI/CD
+    • Mostly manual regression testing  
+    • Limited code reuse between projects
+    • Traditional deployment processes
+    
+    Adjust Industry Benchmarks to match YOUR current automation level
+    """)
+    
     # Project Basics
     st.sidebar.subheader("Project Basics")
     
@@ -757,6 +770,73 @@ def main():
         
         ---
         **Ready to start? Work through Steps 1-4 above, then review your results!**
+        """)
+    
+    # Understanding Your Baseline - NEW SECTION
+    with st.expander("Understanding Your Baseline Efficiency", expanded=False):
+        st.markdown("""
+        ## What Does "Baseline" Mean in This Model?
+        
+        **Your baseline represents your organization's CURRENT development efficiency** - how you build software TODAY without any N2S initiatives.
+        
+        ### Baseline Assumptions (Industry Averages)
+        
+        The model assumes your current baseline includes:
+        
+        #### **Current Automation Level: ~20-30%**
+        - **Some basic unit testing** (but not comprehensive)
+        - **Manual regression testing** for most critical paths
+        - **Basic CI/CD pipelines** (but not fully automated)
+        - **Standard development tools** (IDEs, version control)
+        - **Traditional project management** approaches
+        
+        #### **Current Quality Practices:**
+        - **Bug detection primarily in testing phases** (not shift-left)
+        - **Manual code reviews** without extensive automation
+        - **Standard defect rates** (industry average: 1-5 defects per 1000 lines of code)
+        - **Traditional environment setup** (some manual configuration)
+        
+        #### **Current Integration Patterns:**
+        - **Custom integrations** built from scratch for most projects
+        - **Limited code reuse** between projects
+        - **Manual deployment processes** for production releases
+        
+        ### How N2S Initiatives Improve Upon Baseline
+        
+        **The efficiency gains calculated represent improvements ABOVE your current baseline:**
+        
+        #### **Example: Automated Testing Initiative**
+        - **Your Baseline**: 70% manual testing, 30% automated
+        - **At 50% N2S Maturity**: 45% manual testing, 55% automated  
+        - **At 100% N2S Maturity**: 15% manual testing, 85% automated
+        - **Hours Saved**: Reduction in manual testing effort + faster feedback loops
+        
+        #### **Example: Integration Code Reuse**
+        - **Your Baseline**: Build each integration from scratch
+        - **At 50% N2S Maturity**: Reuse 40-50% of integration components
+        - **At 100% N2S Maturity**: Reuse 80-90% via standardized API library
+        - **Hours Saved**: Reduction in custom development time
+        
+        ### Calibrating to YOUR Baseline
+        
+        **If your organization is MORE advanced than industry average:**
+        - Set **Industry Benchmarks lower** (20-30% improvements)
+        - Your actual savings will be **smaller** than shown
+        - Focus on **incremental optimization** rather than transformation
+        
+        **If your organization is LESS advanced than industry average:**
+        - Set **Industry Benchmarks higher** (50-70% improvements)  
+        - Your actual savings will be **larger** than shown
+        - You have **significant transformation opportunity**
+        
+        ### Key Principle: Conservative by Design
+        
+        **This model errs on the side of conservative estimates:**
+        - Baseline assumes you're **already doing some automation**
+        - Efficiency gains are **incremental improvements**, not wholesale transformation
+        - Results should be **achievable and defensible** to stakeholders
+        
+                 **Bottom Line:** The baseline represents a "typical" software development organization with moderate automation maturity. Adjust the Industry Benchmarks to reflect YOUR organization's current state relative to this baseline.
         """)
     
     # Load model
