@@ -124,7 +124,7 @@ def create_sidebar_controls(model):
             initiative.replace('_', ' '),
             min_value=0,
             max_value=100,
-            value=50,
+            value=70,  # Changed from 50 to 70 for ~20% savings with Enhanced scenario
             step=5,
             help=f"{initiative_desc}"
         )
@@ -140,7 +140,7 @@ def create_sidebar_controls(model):
     scenario = st.sidebar.selectbox(
         "Development Efficiency Scenario",
         options=list(SCENARIOS.keys()),
-        index=0,
+        index=1,  # Default to Enhanced (20% boost) instead of Baseline
         help="Choose the development efficiency improvement scenario"
     )
     
