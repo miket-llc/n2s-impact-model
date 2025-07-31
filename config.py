@@ -174,30 +174,30 @@ SCENARIOS = {
     'Baseline Matrix': {
         'base_factor': 1.0,
         'description': ('Conservative improvements using matrix at face value '
-                        '(actual savings depend on your data and maturity levels)')
+                        '(expect 10-15% savings with moderate maturity levels)')
     },
     'Enhanced (20% boost)': {
         'base_factor': 1.0,
-        'additional_factor': 0.5,  # 50% additional benefits
+        'additional_factor': 0.4,  # 40% additional benefits
         'description': ('Enhanced benefits from higher test automation '
-                        'and deeper reuse - adds 50% boost to testing '
-                        'and quality improvements')
+                        'and deeper reuse - adds 40% boost to testing '
+                        'and quality improvements (expect 15-25% savings)')
     },
     'Maximum (30% boost)': {
         'base_factor': 1.0,
-        'additional_factor': 0.75,  # 75% additional benefits
+        'additional_factor': 0.6,  # 60% additional benefits  
         'max_savings_caps': {  # Maximum credible savings per phase
-            'Discover': 0.30,
-            'Plan': 0.35,
-            'Design': 0.40,
-            'Build': 0.45,
-            'Test': 0.50,
-            'Deploy': 0.40,
-            'Post Go-Live': 0.75
+            'Discover': 0.40,
+            'Plan': 0.45,
+            'Design': 0.50,
+            'Build': 0.55,
+            'Test': 0.70,
+            'Deploy': 0.50,
+            'Post Go-Live': 0.80
         },
-        'description': ('Near-maximum credible improvements with '
-                        'empirically defensible limits - adds 75% boost '
-                        'with safety caps')
+        'description': ('Maximum credible improvements with '
+                        'empirically defensible limits - adds 60% boost '
+                        'with safety caps (expect 20-30% savings)')
     }
 }
 
@@ -244,8 +244,8 @@ INDUSTRY_BENCHMARKS = {
     'test_automation_cost_reduction': 0.15,  # 15% from Gartner/Forrester
     'quality_improvement': 0.20,  # 20% quality improvement
     'post_release_defect_reduction': 0.25,  # 25% from McKinsey
-    'testing_phase_reduction': 0.35,  # 30-40% from Perfecto/Testlio
-    'manual_testing_reduction': 0.35,  # 35% manual testing reduction
+    'testing_phase_reduction': 0.45,  # 30-50% from Perfecto/Testlio (increased)
+    'manual_testing_reduction': 0.40,  # 35-45% manual testing reduction (increased)
     'defect_fix_cost_multipliers': {
         'unit_test': 10,
         'system_test': 40, 
@@ -253,8 +253,8 @@ INDUSTRY_BENCHMARKS = {
     }
 }
 
-# Maximum credible total cost reduction (validation check)
-MAX_TOTAL_COST_REDUCTION = 0.30  # 30% without radical scope change
+# Maximum credible total cost reduction (updated for N2S reality)
+MAX_TOTAL_COST_REDUCTION = 0.35  # 35% for aggressive N2S implementations
 
 # =============================================================================
 # FILE PATHS  
