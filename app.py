@@ -73,32 +73,100 @@ def create_sidebar_controls():
     from config import APP_VERSION
     st.sidebar.caption(f"{APP_VERSION}")
     
-    # Baseline Efficiency Reminder
+    # Baseline Efficiency Reminder - Updated
     st.sidebar.info("""
-    **Your Current State: Minimal Automation**
+    **Step 1: Assess Your Current Automation Maturity**
     
-    • Some basic testing, mostly manual processes
-    • Limited CI/CD and code reuse
-    • Traditional deployment methods
-    
-    Choose your savings target below ↓
+    Complete the assessment below to understand your starting point 
+    and realistic savings potential.
     """)
     
-    # Major Modeling Decisions - MOVED TO TOP
-    st.sidebar.subheader("Major Modeling Decisions")
+    # Current State Assessment
+    st.sidebar.subheader("Current State Assessment")
     
-    scenario = st.sidebar.selectbox(
-        "Project Savings Target",
-        options=list(SCENARIOS.keys()),
-        index=0,  # Default to conservative
+    from config import AUTOMATION_ASSESSMENT, assess_current_maturity
+    
+    # Collect assessment responses
+    assessment_responses = {}
+    
+    for question_key, question_config in AUTOMATION_ASSESSMENT.items():
+        if question_config['type'] == 'slider':
+            assessment_responses[question_key] = st.sidebar.slider(
+                question_config['question'],
+                min_value=question_config['min_value'],
+                max_value=question_config['max_value'],
+                value=question_config['default'],
+                help=question_config['help'],
+                key=f"assess_{question_key}"
+            )
+        elif question_config['type'] == 'selectbox':
+            assessment_responses[question_key] = st.sidebar.selectbox(
+                question_config['question'],
+                options=question_config['options'],
+                index=question_config['default'],
+                help=question_config['help'],
+                key=f"assess_{question_key}"
+            )
+    
+    # Calculate current maturity
+    current_maturity = assess_current_maturity(assessment_responses)
+    
+    # Display maturity assessment results
+    st.sidebar.success(f"""
+    **Your Current Maturity: Level {current_maturity['maturity_level']} - {current_maturity['maturity_name']}**
+    
+    Realistic Savings Potential: {current_maturity['current_savings_potential']:.1f}%
+    """)
+    
+    # Major Modeling Decisions
+    st.sidebar.subheader("Target & Strategy")
+    
+    # Target savings with guidance
+    max_potential = current_maturity['current_savings_potential'] + 10  # Buffer for initiatives
+    target_savings = st.sidebar.slider(
+        "Target Project Savings %",
+        min_value=5,
+        max_value=30,
+        value=min(15, int(current_maturity['current_savings_potential'])),
+        step=1,
         help=(
-            "How much do you want to save on this project? "
-            "10% = light automation improvements. "
-            "20% = moderate automation enhancements. "
-            "30% = aggressive automation transformation. "
-            "(All percentages exclude cost avoidance)"
+            f"Based on your maturity assessment, you can realistically achieve "
+            f"up to {current_maturity['current_savings_potential']:.1f}% savings. "
+            f"Higher targets may require maturity improvements first."
         )
     )
+    
+    # Generate scenario configuration based on target and maturity
+    from config import calculate_target_feasibility
+    
+    # We'll need selected initiatives for feasibility check - get a preview first
+    available_initiatives = INITIATIVE_FALLBACK  # Will be updated below
+    
+    feasibility = calculate_target_feasibility(
+        current_maturity, target_savings, available_initiatives
+    )
+    
+    # Display feasibility assessment
+    if feasibility['feasible']:
+        st.sidebar.success(f"✓ Target {target_savings}% is achievable with your current maturity")
+    else:
+        st.sidebar.warning(f"""
+        ⚠️ Target {target_savings}% requires maturity improvements
+        
+        Gap: {feasibility['gap']:.1f}% 
+        Recommended: Level {feasibility['required_maturity_level']} ({feasibility['required_maturity_name']})
+        """)
+    
+    # Convert to scenario config for the existing model
+    scenario_config = {
+        'target_percentage': target_savings,
+        'current_maturity': current_maturity,
+        'feasibility': feasibility,
+        'description': f"Target {target_savings}% savings (Current maturity: Level {current_maturity['maturity_level']})"
+    }
+    
+    # Display the approach being used
+    st.sidebar.caption(f"Approach: {scenario_config['description']}")
     
     cost_avoidance_selection = st.sidebar.selectbox(
         "Cost Avoidance Model",
@@ -332,10 +400,13 @@ Higher for manual→automated transitions."""
         'maturity_levels': maturity_levels,
         'initiative_weights': initiative_weights,
         'available_initiatives': available_initiatives,
-        'scenario': scenario,
+        'scenario_config': scenario_config,
         'risk_weights': risk_weights,
         'cost_avoidance_config': cost_avoidance_config,
-        'industry_benchmarks': custom_benchmarks
+        'industry_benchmarks': custom_benchmarks,
+        'current_maturity': current_maturity,
+        'feasibility': feasibility,
+        'assessment_responses': assessment_responses
     }
 
 
@@ -846,18 +917,73 @@ def main():
     # Load model
     model = initialize_model()
     
-    # Create sidebar controls
+    # Create sidebar controls (includes maturity assessment)
     controls = create_sidebar_controls()
     if controls is None:
         st.error("Please fix the phase allocation percentages in the sidebar.")
         return
     
-    # Run calculations
+    # Display Maturity Assessment Results
+    st.header("Maturity Assessment Results")
+    
+    current_maturity = controls['current_maturity']
+    feasibility = controls['feasibility']
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric(
+            "Current Maturity Level",
+            f"Level {current_maturity['maturity_level']}",
+            delta=current_maturity['maturity_name']
+        )
+    
+    with col2:
+        st.metric(
+            "Current Savings Potential", 
+            f"{current_maturity['current_savings_potential']:.1f}%",
+            delta=f"{current_maturity['savings_range'][0]}-{current_maturity['savings_range'][1]}% range"
+        )
+    
+    with col3:
+        target_savings = controls['scenario_config']['target_percentage']
+        if feasibility['feasible']:
+            st.metric("Target Feasibility", "✓ Achievable", delta="With current maturity")
+        else:
+            st.metric("Target Feasibility", "⚠ Requires Improvement", delta=f"{feasibility['gap']:.1f}% gap")
+    
+    # Maturity Details and Recommendations
+    with st.expander("Maturity Analysis & Recommendations", expanded=False):
+        st.markdown(f"""
+        ### Current State: {current_maturity['maturity_name']}
+        
+        **Description:** {current_maturity['maturity_description']}
+        
+        ### Current Automation Characteristics:
+        """)
+        
+        for area, description in current_maturity['automation_characteristics'].items():
+            st.markdown(f"- **{area.replace('_', ' ').title()}**: {description}")
+        
+        if not feasibility['feasible']:
+            st.markdown(f"""
+            ### Recommendations to Reach {target_savings}% Target:
+            
+            **Required Maturity Level:** {feasibility['required_maturity_name']} (Level {feasibility['required_maturity_level']})
+            """)
+            
+            for i, recommendation in enumerate(feasibility['recommendations'], 1):
+                st.markdown(f"{i}. {recommendation}")
+        
+        else:
+            st.success("Your current maturity level supports your target savings goal!")
+    
+    # Run calculations with existing model
     try:
-        # Apply maturity and scenario with custom industry benchmarks
+        # Apply maturity and scenario with dynamic scaling
         effective_deltas = model.apply_maturity_and_scenario(
             controls['maturity_levels'],
-            controls['scenario'],
+            controls['scenario_config'],  # Pass the config dict instead of string
             controls['industry_benchmarks']
         )
         
@@ -1032,12 +1158,10 @@ def main():
         # Model details
         with st.expander("Model Details & Assumptions"):
             st.markdown("""
-            **Industry Benchmarks Used:**
-            - Test automation cost reduction: 15% (Gartner/Forrester)
-            - Quality improvement: 20% 
-            - Post-release defect reduction: 25% (McKinsey)
-            - Testing phase reduction: 30-40% (Perfecto/Testlio)
-            - Manual testing reduction: 35%
+            **Dynamic Scaling Approach:**
+            - **5-12%**: Conservative automation, proven low-risk approaches
+            - **13-22%**: Moderate automation with enhanced testing and quality  
+            - **23%+**: Aggressive transformation with comprehensive safety caps
             
             **Scenario Definitions:**
             - **Target: ~10% Savings**: Light automation improvements, proven approaches

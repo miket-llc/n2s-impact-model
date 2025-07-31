@@ -60,15 +60,15 @@ class N2SEfficiencyModel:
     def apply_maturity_and_scenario(
         self,
         maturity_levels: Dict[str, float],
-        scenario: str,
+        scenario_config: Dict,
         industry_benchmarks: Optional[Dict] = None
     ) -> pd.DataFrame:
         """
-        Apply maturity levels and scenario factors to get effective hour deltas.
+        Apply maturity levels and scenario config to get effective hour deltas.
         
         Args:
             maturity_levels: Dict mapping initiative names to maturity % (0-100)
-            scenario: Scenario name from SCENARIOS
+            scenario_config: Dict with target percentage and maturity info
             industry_benchmarks: Optional custom industry benchmark values
             
         Returns:
@@ -90,43 +90,70 @@ class N2SEfficiencyModel:
                     effective_matrix.loc[initiative] * maturity_multiplier
                 )
         
-        # Apply scenario-specific enhancements
-        if scenario in SCENARIOS:
-            scenario_config = SCENARIOS[scenario]
+        # Apply scaling based on target savings and organizational maturity
+        target_percentage = scenario_config.get('target_percentage', 15)
+        current_maturity = scenario_config.get('current_maturity', {})
+        current_level = current_maturity.get('maturity_level', 2)
+        
+        # Calculate scaling factors based on target and current maturity
+        base_intensity = target_percentage / 15.0  # 15% = 1.0x baseline
+        
+        # Maturity-based adjustment
+        maturity_factor = current_level / 3.0  # Level 3 = 1.0x, higher levels get bonus
+        
+        # Progressive scaling
+        if target_percentage <= 10:
+            additional_factor = 0.0
+            testing_boost = base_intensity * 0.2 * maturity_factor
+            quality_boost = base_intensity * 0.15 * maturity_factor
             
-            if scenario == 'Target: ~20% Savings':
-                # Enhanced test automation and shift-left benefits
-                test_boost = industry_benchmarks['testing_phase_reduction']
-                effective_matrix['Test'] *= (1 + test_boost)
-                
-                # Enhanced quality improvements across development phases
-                quality_boost = industry_benchmarks['quality_improvement']
-                for phase in ['Design', 'Build', 'Test']:
-                    effective_matrix[phase] *= (1 + quality_boost * 0.5)
+        elif target_percentage <= 20:
+            progress = (target_percentage - 10) / 10.0
+            additional_factor = progress * 0.8 * maturity_factor
+            testing_boost = base_intensity * (0.3 + progress * 0.2) * maturity_factor
+            quality_boost = base_intensity * (0.2 + progress * 0.15) * maturity_factor
+            
+        else:
+            progress = min(1.0, (target_percentage - 20) / 10.0)
+            additional_factor = (0.8 + progress * 0.7) * maturity_factor
+            testing_boost = base_intensity * (0.5 + progress * 0.3) * maturity_factor
+            quality_boost = base_intensity * (0.35 + progress * 0.25) * maturity_factor
+        
+        # Apply enhancements if factors are significant
+        if additional_factor > 0 or testing_boost > 0:
+            # Enhanced test automation 
+            if testing_boost > 0:
+                base_test_boost = industry_benchmarks['testing_phase_reduction']
+                effective_matrix['Test'] *= (1 + base_test_boost * testing_boost)
+            
+            # Quality improvements across development phases
+            if quality_boost > 0:
+                base_quality_boost = industry_benchmarks['quality_improvement']
+                quality_phases = ['Design', 'Build', 'Test']
+                if additional_factor > 0.5:
+                    quality_phases.append('Deploy')
                     
-            elif scenario == 'Target: ~30% Savings':
-                # Enhanced test automation and shift-left benefits
-                test_boost = industry_benchmarks['testing_phase_reduction']
-                effective_matrix['Test'] *= (1 + test_boost * 1.5)
-                
-                # Enhanced quality improvements across development phases
-                quality_boost = industry_benchmarks['quality_improvement']
-                for phase in ['Design', 'Build', 'Test', 'Deploy']:
-                    effective_matrix[phase] *= (1 + quality_boost)
-                
-                # Apply maximum savings caps if specified
-                if 'max_savings_caps' in scenario_config:
-                    caps = scenario_config['max_savings_caps']
-                    baseline_hours = calculate_baseline_hours(17054, DEFAULT_PHASE_ALLOCATION)
-                    
-                    for phase in effective_matrix.columns:
-                        if phase in caps:
-                            max_savings = baseline_hours[phase] * caps[phase]
-                            # Cap the total savings per phase
-                            total_savings = abs(effective_matrix[phase].sum())
-                            if total_savings > max_savings:
-                                scale_factor = max_savings / total_savings
-                                effective_matrix[phase] *= scale_factor
+                for phase in quality_phases:
+                    if phase in effective_matrix.columns:
+                        effective_matrix[phase] *= (1 + base_quality_boost * quality_boost)
+        
+        # Apply conservative caps for high targets with low maturity
+        if target_percentage > 20 and current_level < 4:
+            # More conservative caps for organizations not ready for aggressive targets
+            conservative_caps = {
+                'Discover': 0.35, 'Plan': 0.40, 'Design': 0.45,
+                'Build': 0.50, 'Test': 0.60, 'Deploy': 0.45, 'Post Go-Live': 0.65
+            }
+            
+            baseline_hours = calculate_baseline_hours(17054, DEFAULT_PHASE_ALLOCATION)
+            
+            for phase in effective_matrix.columns:
+                if phase in conservative_caps:
+                    max_savings = baseline_hours[phase] * conservative_caps[phase]
+                    total_savings = abs(effective_matrix[phase].sum())
+                    if total_savings > max_savings:
+                        scale_factor = max_savings / total_savings
+                        effective_matrix[phase] *= scale_factor
         
         return effective_matrix
 
@@ -324,7 +351,7 @@ def run_model_scenario(
     blended_rate: float = 100,
     phase_allocation: Optional[Dict[str, float]] = None,
     maturity_levels: Optional[Dict[str, float]] = None,
-    scenario: str = 'Target: ~10% Savings',
+    target_savings: float = 15,  # Changed from scenario string to target percentage
     risk_weights: Optional[Dict[str, float]] = None
 ) -> Dict:
     """
@@ -347,7 +374,13 @@ def run_model_scenario(
     model = N2SEfficiencyModel()
     model.create_sample_data()
     
-    effective_deltas = model.apply_maturity_and_scenario(maturity_levels, scenario, None)
+    # Generate dynamic scenario config
+    from config import calculate_dynamic_scaling
+    scenario_config = calculate_dynamic_scaling(target_savings)
+    
+    effective_deltas = model.apply_maturity_and_scenario(
+        maturity_levels, scenario_config, None
+    )
     baseline_hours, modeled_hours = model.calculate_phase_hours(
         total_hours, phase_allocation, effective_deltas
     )
@@ -377,5 +410,6 @@ def run_model_scenario(
         'kpi_summary': kpi_summary,
         'baseline_hours': baseline_hours,
         'modeled_hours': modeled_hours,
-        'effective_deltas': effective_deltas
+        'effective_deltas': effective_deltas,
+        'scenario_config': scenario_config
     } 

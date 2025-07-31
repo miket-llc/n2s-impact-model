@@ -190,10 +190,284 @@ def get_phase_risk_info(phase: str) -> dict:
     }
 
 # =============================================================================
-# SCENARIO DEFINITIONS
+# MATURITY ASSESSMENT FRAMEWORK (CMMI-inspired)
 # =============================================================================
 
-SCENARIOS = {
+MATURITY_LEVELS = {
+    1: {
+        "name": "Ad-hoc/Manual",
+        "description": "Processes are unpredictable, poorly controlled, and reactive",
+        "automation_characteristics": {
+            "test_automation": "0-20%",
+            "ci_cd": "Manual deployments",
+            "code_reuse": "0-10%", 
+            "documentation": "Manual/inconsistent",
+            "environment_management": "Manual setup"
+        },
+        "savings_potential_range": [5, 8],
+        "typical_savings": 6.5
+    },
+    2: {
+        "name": "Repeatable", 
+        "description": "Processes are characterized for projects and often reactive",
+        "automation_characteristics": {
+            "test_automation": "20-40%",
+            "ci_cd": "Basic automated builds",
+            "code_reuse": "10-25%",
+            "documentation": "Templates used",
+            "environment_management": "Some standardization"
+        },
+        "savings_potential_range": [8, 12],
+        "typical_savings": 10
+    },
+    3: {
+        "name": "Defined",
+        "description": "Processes are characterized for organization and proactive", 
+        "automation_characteristics": {
+            "test_automation": "40-65%",
+            "ci_cd": "Automated testing in pipeline",
+            "code_reuse": "25-40%",
+            "documentation": "Standardized and automated",
+            "environment_management": "Standardized environments"
+        },
+        "savings_potential_range": [12, 18],
+        "typical_savings": 15
+    },
+    4: {
+        "name": "Managed",
+        "description": "Processes are measured and controlled",
+        "automation_characteristics": {
+            "test_automation": "65-85%", 
+            "ci_cd": "Full deployment automation",
+            "code_reuse": "40-60%",
+            "documentation": "Generated and maintained",
+            "environment_management": "Infrastructure as Code"
+        },
+        "savings_potential_range": [18, 25],
+        "typical_savings": 21.5
+    },
+    5: {
+        "name": "Optimizing",
+        "description": "Focus on continuous process improvement",
+        "automation_characteristics": {
+            "test_automation": "85%+",
+            "ci_cd": "Self-healing pipelines",
+            "code_reuse": "60%+",
+            "documentation": "AI-assisted and self-updating",
+            "environment_management": "Fully automated and optimized"
+        },
+        "savings_potential_range": [25, 30],
+        "typical_savings": 27.5
+    }
+}
+
+# Automation Assessment Questions
+AUTOMATION_ASSESSMENT = {
+    "test_automation_coverage": {
+        "question": "What percentage of your testing is currently automated?",
+        "type": "slider",
+        "min_value": 0,
+        "max_value": 100,
+        "default": 30,
+        "weight": 0.3,
+        "help": "Include unit tests, integration tests, and regression testing"
+    },
+    "ci_cd_maturity": {
+        "question": "Current CI/CD automation level:",
+        "type": "selectbox",
+        "options": [
+            "Manual deployments",
+            "Basic build automation", 
+            "Automated testing in pipeline",
+            "Full deployment automation",
+            "Self-healing pipelines"
+        ],
+        "default": 1,
+        "weight": 0.25,
+        "help": "How automated is your build and deployment process?"
+    },
+    "code_reuse_level": {
+        "question": "What percentage of code/components do you typically reuse across projects?",
+        "type": "slider", 
+        "min_value": 0,
+        "max_value": 80,
+        "default": 20,
+        "weight": 0.2,
+        "help": "Shared libraries, components, APIs, and integration patterns"
+    },
+    "environment_automation": {
+        "question": "Environment management maturity:",
+        "type": "selectbox",
+        "options": [
+            "Manual environment setup",
+            "Some scripted setup",
+            "Standardized environments", 
+            "Infrastructure as Code",
+            "Fully automated and optimized"
+        ],
+        "default": 1,
+        "weight": 0.15,
+        "help": "How are development, test, and production environments managed?"
+    },
+    "documentation_automation": {
+        "question": "Documentation and knowledge management:",
+        "type": "selectbox",
+        "options": [
+            "Manual documentation",
+            "Template-based documentation",
+            "Some automated generation",
+            "Mostly automated documentation",
+            "AI-assisted and self-updating"
+        ],
+        "default": 1,
+        "weight": 0.1,
+        "help": "How is project documentation created and maintained?"
+    }
+}
+
+def assess_current_maturity(assessment_responses: dict) -> dict:
+    """
+    Calculate current maturity level based on assessment responses
+    
+    Args:
+        assessment_responses: Dict with user responses to assessment questions
+        
+    Returns:
+        Dict with maturity analysis and savings potential
+    """
+    total_score = 0.0
+    max_score = 0.0
+    
+    for question_key, response in assessment_responses.items():
+        if question_key in AUTOMATION_ASSESSMENT:
+            question_config = AUTOMATION_ASSESSMENT[question_key]
+            weight = question_config['weight']
+            
+            if question_config['type'] == 'slider':
+                # Normalize slider values to 0-1 scale
+                score = response / 100.0
+            elif question_config['type'] == 'selectbox':
+                # Convert selectbox index to 0-1 scale
+                max_options = len(question_config['options']) - 1
+                score = response / max_options if max_options > 0 else 0
+            
+            total_score += score * weight
+            max_score += weight
+    
+    # Calculate maturity level (1-5 scale)
+    normalized_score = total_score / max_score if max_score > 0 else 0
+    maturity_level = min(5, max(1, int(normalized_score * 4) + 1))
+    
+    # Get maturity level details
+    level_info = MATURITY_LEVELS[maturity_level]
+    
+    # Calculate realistic savings potential based on current state
+    min_savings, max_savings = level_info['savings_potential_range']
+    
+    # Fine-tune based on specific automation scores
+    test_auto_boost = (assessment_responses.get('test_automation_coverage', 30) - 30) * 0.1
+    cicd_boost = (assessment_responses.get('ci_cd_maturity', 1) - 1) * 0.5
+    
+    adjusted_savings = level_info['typical_savings'] + test_auto_boost + cicd_boost
+    realistic_max = min(max_savings, max(min_savings, adjusted_savings))
+    
+    return {
+        'maturity_level': maturity_level,
+        'maturity_name': level_info['name'],
+        'maturity_description': level_info['description'],
+        'automation_characteristics': level_info['automation_characteristics'],
+        'current_savings_potential': realistic_max,
+        'savings_range': [min_savings, max_savings],
+        'assessment_score': normalized_score,
+        'improvement_areas': _identify_improvement_areas(assessment_responses)
+    }
+
+def _identify_improvement_areas(responses: dict) -> list:
+    """Identify areas with lowest scores for improvement recommendations"""
+    areas = []
+    for question_key, response in responses.items():
+        if question_key in AUTOMATION_ASSESSMENT:
+            question_config = AUTOMATION_ASSESSMENT[question_key]
+            if question_config['type'] == 'slider' and response < 50:
+                areas.append(question_key)
+            elif question_config['type'] == 'selectbox' and response < 2:
+                areas.append(question_key)
+    return areas
+
+def calculate_target_feasibility(current_maturity: dict, target_savings: float, 
+                               selected_initiatives: list) -> dict:
+    """
+    Determine if target savings is feasible given current state and initiatives
+    
+    Args:
+        current_maturity: Output from assess_current_maturity()
+        target_savings: Desired savings percentage
+        selected_initiatives: List of selected N2S initiatives
+        
+    Returns:
+        Dict with feasibility analysis and recommendations
+    """
+    current_potential = current_maturity['current_savings_potential']
+    
+    # Calculate initiative boost potential
+    initiative_boost = len(selected_initiatives) * 1.5  # Rough estimate: 1.5% per initiative
+    
+    # Calculate total potential with initiatives
+    total_potential = current_potential + initiative_boost
+    
+    feasible = target_savings <= total_potential
+    
+    if not feasible:
+        # Find what maturity level would be needed
+        required_level = 5
+        for level in range(1, 6):
+            level_max = MATURITY_LEVELS[level]['savings_potential_range'][1]
+            if target_savings <= level_max + initiative_boost:
+                required_level = level
+                break
+    else:
+        required_level = current_maturity['maturity_level']
+    
+    return {
+        'feasible': feasible,
+        'current_potential': current_potential,
+        'total_potential_with_initiatives': total_potential,
+        'gap': max(0, target_savings - total_potential),
+        'required_maturity_level': required_level,
+        'required_maturity_name': MATURITY_LEVELS[required_level]['name'],
+        'recommendations': _generate_recommendations(current_maturity, required_level)
+    }
+
+def _generate_recommendations(current_maturity: dict, target_level: int) -> list:
+    """Generate specific recommendations to reach target maturity level"""
+    recommendations = []
+    current_level = current_maturity['maturity_level']
+    
+    if target_level <= current_level:
+        return ["Your current maturity level is sufficient for this target"]
+    
+    improvement_areas = current_maturity['improvement_areas']
+    
+    if 'test_automation_coverage' in improvement_areas:
+        recommendations.append("Increase automated test coverage to 60%+ (current focus area)")
+    
+    if 'ci_cd_maturity' in improvement_areas:
+        recommendations.append("Implement full CI/CD pipeline with automated deployments")
+    
+    if 'code_reuse_level' in improvement_areas:
+        recommendations.append("Develop reusable component library (target 40%+ reuse)")
+    
+    if target_level >= 4:
+        recommendations.append("Implement Infrastructure as Code for environment management")
+        recommendations.append("Add comprehensive monitoring and measurement systems")
+    
+    if target_level >= 5:
+        recommendations.append("Focus on continuous optimization and AI-assisted processes")
+    
+    return recommendations
+
+# Remove old hardcoded SCENARIOS - keeping for reference only
+SCENARIOS_LEGACY = {
     'Target: ~10% Savings': {
         'base_factor': 1.0,
         'description': (
@@ -212,7 +486,7 @@ SCENARIOS = {
     'Target: ~30% Savings': {
         'base_factor': 1.0,
         'additional_factor': 1.5,
-        'max_savings_caps': {  # Maximum credible savings per phase
+        'max_savings_caps': {
             'Discover': 0.50,
             'Plan': 0.55,
             'Design': 0.60,
