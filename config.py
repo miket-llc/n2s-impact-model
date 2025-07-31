@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.4.0 - DEFAULT: Enhanced scenario @ 70% maturity = 20% savings"
+APP_VERSION = "v2.4.1 - FORCE REBUILD: Should now show 20%+ savings!"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
