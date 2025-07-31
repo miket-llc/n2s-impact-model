@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.5.0 - CONSERVATIVE defaults: Baseline @ 50% = 12.5% savings"
+APP_VERSION = "v2.6.0 - REALISTIC calibration: 8% baseline, up to 25% enhanced"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054

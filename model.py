@@ -114,36 +114,36 @@ class N2SEfficiencyModel:
     def _create_sample_matrix(self) -> None:
         """
         Create sample matrix data for demonstration
-        Updated to reflect realistic N2S savings potential (10-30% range)
+        Updated to reflect realistic N2S savings potential aligned with industry research
         """
         initiatives = INITIATIVE_FALLBACK.copy()
         
         # Realistic hour deltas based on N2S industry benchmarks
         # (+ adds effort, - saves effort)
-        # Total potential savings: ~15-25% with high maturity
+        # Calibrated for: 50% maturity baseline = ~8% savings, 100% = ~16%
         sample_data = {
             # Early phases: Moderate savings from better planning/reuse
-            'Discover': [-20, -15, -30, -40, -10, -25, -35],      # ~175 hours saved
-            'Plan': [-30, -25, -50, -60, -15, -40, -45],          # ~265 hours saved
-            'Design': [-50, -40, -70, -80, -60, -55, -65],        # ~420 hours saved
+            'Discover': [-13, -10, -19, -26, -6, -16, -22],       # ~112 hours saved
+            'Plan': [-19, -16, -32, -38, -10, -26, -29],          # ~170 hours saved
+            'Design': [-32, -26, -45, -51, -38, -35, -42],        # ~269 hours saved
             
             # Development: Major savings from automation, reuse, modern tools
-            'Build': [-80, -120, -100, -150, -200, -90, -180],    # ~920 hours saved
+            'Build': [-51, -77, -64, -96, -128, -58, -115],       # ~589 hours saved
             
             # Testing: Biggest savings potential from automation
-            'Test': [-200, -180, -160, -120, -250, -100, -280],   # ~1290 hours saved
+            'Test': [-128, -115, -102, -77, -160, -64, -179],     # ~825 hours saved
             
             # Deployment: Significant savings from automation/environments
-            'Deploy': [-40, -80, -30, -60, -50, -35, -45],        # ~340 hours saved
+            'Deploy': [-26, -51, -19, -38, -32, -22, -29],        # ~217 hours saved
             
             # Post Go-Live: Major savings from quality improvements
-            'Post Go-Live': [-150, -100, -120, -180, -80, -90, -140] # ~860 hours saved
+            'Post Go-Live': [-96, -64, -77, -115, -51, -58, -90]  # ~551 hours saved
         }
         
-        # Total potential savings at 100% maturity: ~4270 hours
-        # Percentage of 17,054 total hours: ~25% savings potential
-        # At 50% maturity (default): ~12.5% savings
-        # This aligns with realistic N2S expectations of 10-30%
+        # Total potential savings at 100% maturity: ~2733 hours
+        # Percentage of 17,054 total hours: ~16% savings potential at 100% maturity
+        # At 50% maturity (default): ~8% savings - realistic baseline
+        # This aligns with conservative industry research for baseline scenarios
         
         self.matrix_data = pd.DataFrame(sample_data, index=initiatives)
         self.initiatives = initiatives
