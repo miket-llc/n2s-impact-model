@@ -75,25 +75,29 @@ def create_sidebar_controls():
     
     # Baseline Efficiency Reminder
     st.sidebar.info("""
-    **Your Baseline Efficiency**
+    **Your Current Baseline: ~25% Automation**
     
-    Assumes ~25% current automation:
     • Basic unit testing & CI/CD
     • Mostly manual regression testing  
     • Limited code reuse between projects
     • Traditional deployment processes
     
-    Adjust Industry Benchmarks to match YOUR current automation level
+    Choose a target automation level below ↓
     """)
     
     # Major Modeling Decisions - MOVED TO TOP
     st.sidebar.subheader("Major Modeling Decisions")
     
     scenario = st.sidebar.selectbox(
-        "Development Efficiency Scenario",
+        "Target Automation Level",
         options=list(SCENARIOS.keys()),
-        index=0,  # Default to conservative "Baseline Matrix"
-        help="Choose efficiency improvement level"
+        index=0,  # Default to conservative
+        help=(
+            "Where do you want to move your automation maturity? "
+            "Conservative = stay near current 25% baseline. "
+            "Moderate = improve to 40% automation. "
+            "Aggressive = transform to 60%+ automation."
+        )
     )
     
     cost_avoidance_selection = st.sidebar.selectbox(
@@ -1036,9 +1040,9 @@ def main():
             - Manual testing reduction: 35%
             
             **Scenario Definitions:**
-            - **Baseline Matrix**: Conservative improvements using matrix values
-            - **Enhanced (20% boost)**: Enhanced benefits from higher automation
-            - **Maximum (30% boost)**: Near-maximum credible improvements with caps
+            - **Conservative (~25% baseline)**: Stay close to current automation baseline
+            - **Moderate (~40% target)**: Enhanced automation and quality practices  
+            - **Aggressive (~60% target)**: Comprehensive transformation with safety caps
             
             **Key Assumptions:**
             - Direct savings apply to development phases (Discover-Deploy)

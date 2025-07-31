@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.12.9 - Major model.py Cleanup + Modern 88-char Standards"
+APP_VERSION = "v2.12.10 - Clear Baseline Efficiency Explanation + User Guidance"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
@@ -194,21 +194,22 @@ def get_phase_risk_info(phase: str) -> dict:
 # =============================================================================
 
 SCENARIOS = {
-    'Baseline Matrix': {
+    'Conservative (~25% baseline)': {
         'base_factor': 1.0,
         'description': (
-            'Conservative improvements using matrix at face value '
-            '(expect 12-15% savings with moderate maturity levels)'
+            'Stay close to your current ~25% automation baseline. '
+            'Modest improvements with proven, low-risk approaches '
+            '(expect 8-12% total project savings)'
         )
     },
-    'Enhanced (20% boost)': {
+    'Moderate (~40% target)': {
         'base_factor': 1.0,
         'additional_factor': 1.0,  # 100% additional benefits (was 0.4)
-        'description': ('Enhanced benefits from higher test automation '
-                        'and deeper reuse - adds 100% boost to testing '
-                        'and quality improvements (expect 18-25% savings)')
+        'description': ('Move from ~25% to ~40% automation maturity. '
+                        'Enhanced test automation and quality practices '
+                        '(expect 15-20% total project savings)')
     },
-    'Maximum (30% boost)': {
+    'Aggressive (~60% target)': {
         'base_factor': 1.0,
         'additional_factor': 1.5,  # 150% additional benefits (was 0.6)
         'max_savings_caps': {  # Maximum credible savings per phase
@@ -220,9 +221,9 @@ SCENARIOS = {
             'Deploy': 0.60,
             'Post Go-Live': 0.85
         },
-        'description': ('Maximum credible improvements with '
-                        'empirically defensible limits - adds 150% boost '
-                        'with safety caps (expect 25-35% savings)')
+        'description': ('Transform from ~25% to ~60% automation maturity. '
+                        'Comprehensive N2S implementation with safety caps '
+                        '(expect 25-35% total project savings)')
     }
 }
 

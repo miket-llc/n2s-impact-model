@@ -94,7 +94,7 @@ class N2SEfficiencyModel:
         if scenario in SCENARIOS:
             scenario_config = SCENARIOS[scenario]
             
-            if scenario == 'Enhanced (20% boost)':
+            if scenario == 'Moderate (~40% target)':
                 # Enhanced test automation and shift-left benefits
                 test_boost = industry_benchmarks['testing_phase_reduction']
                 effective_matrix['Test'] *= (1 + test_boost)
@@ -104,7 +104,7 @@ class N2SEfficiencyModel:
                 for phase in ['Design', 'Build', 'Test']:
                     effective_matrix[phase] *= (1 + quality_boost * 0.5)
                     
-            elif scenario == 'Maximum (30% boost)':
+            elif scenario == 'Aggressive (~60% target)':
                 # Enhanced test automation and shift-left benefits
                 test_boost = industry_benchmarks['testing_phase_reduction']
                 effective_matrix['Test'] *= (1 + test_boost * 1.5)
@@ -324,7 +324,7 @@ def run_model_scenario(
     blended_rate: float = 100,
     phase_allocation: Optional[Dict[str, float]] = None,
     maturity_levels: Optional[Dict[str, float]] = None,
-    scenario: str = 'Baseline Matrix',
+    scenario: str = 'Conservative (~25% baseline)',
     risk_weights: Optional[Dict[str, float]] = None
 ) -> Dict:
     """
