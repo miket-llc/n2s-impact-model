@@ -194,24 +194,24 @@ def get_phase_risk_info(phase: str) -> dict:
 # =============================================================================
 
 SCENARIOS = {
-    'Conservative (~25% baseline)': {
+    'Target: ~10% Savings': {
         'base_factor': 1.0,
         'description': (
-            'Stay close to your current ~25% automation baseline. '
-            'Modest improvements with proven, low-risk approaches '
-            '(expect 8-12% total project savings)'
+            'Conservative improvements with proven, low-risk approaches. '
+            'Light automation enhancements to achieve ~10% total project savings '
+            '(without cost avoidance)'
         )
     },
-    'Moderate (~40% target)': {
+    'Target: ~20% Savings': {
         'base_factor': 1.0,
-        'additional_factor': 1.0,  # 100% additional benefits (was 0.4)
-        'description': ('Move from ~25% to ~40% automation maturity. '
-                        'Enhanced test automation and quality practices '
-                        '(expect 15-20% total project savings)')
+        'additional_factor': 1.0,
+        'description': ('Moderate automation improvements with enhanced testing '
+                        'and quality practices to achieve ~20% total project savings '
+                        '(without cost avoidance)')
     },
-    'Aggressive (~60% target)': {
+    'Target: ~30% Savings': {
         'base_factor': 1.0,
-        'additional_factor': 1.5,  # 150% additional benefits (was 0.6)
+        'additional_factor': 1.5,
         'max_savings_caps': {  # Maximum credible savings per phase
             'Discover': 0.50,
             'Plan': 0.55,
@@ -221,9 +221,9 @@ SCENARIOS = {
             'Deploy': 0.60,
             'Post Go-Live': 0.85
         },
-        'description': ('Transform from ~25% to ~60% automation maturity. '
-                        'Comprehensive N2S implementation with safety caps '
-                        '(expect 25-35% total project savings)')
+        'description': ('Aggressive automation transformation with comprehensive '
+                        'N2S implementation to achieve ~30% total project savings '
+                        '(without cost avoidance)')
     }
 }
 

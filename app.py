@@ -75,28 +75,28 @@ def create_sidebar_controls():
     
     # Baseline Efficiency Reminder
     st.sidebar.info("""
-    **Your Current Baseline: ~25% Automation**
+    **Your Current State: Minimal Automation**
     
-    • Basic unit testing & CI/CD
-    • Mostly manual regression testing  
-    • Limited code reuse between projects
-    • Traditional deployment processes
+    • Some basic testing, mostly manual processes
+    • Limited CI/CD and code reuse
+    • Traditional deployment methods
     
-    Choose a target automation level below ↓
+    Choose your savings target below ↓
     """)
     
     # Major Modeling Decisions - MOVED TO TOP
     st.sidebar.subheader("Major Modeling Decisions")
     
     scenario = st.sidebar.selectbox(
-        "Target Automation Level",
+        "Project Savings Target",
         options=list(SCENARIOS.keys()),
         index=0,  # Default to conservative
         help=(
-            "Where do you want to move your automation maturity? "
-            "Conservative = stay near current 25% baseline. "
-            "Moderate = improve to 40% automation. "
-            "Aggressive = transform to 60%+ automation."
+            "How much do you want to save on this project? "
+            "10% = light automation improvements. "
+            "20% = moderate automation enhancements. "
+            "30% = aggressive automation transformation. "
+            "(All percentages exclude cost avoidance)"
         )
     )
     
@@ -1040,9 +1040,9 @@ def main():
             - Manual testing reduction: 35%
             
             **Scenario Definitions:**
-            - **Conservative (~25% baseline)**: Stay close to current automation baseline
-            - **Moderate (~40% target)**: Enhanced automation and quality practices  
-            - **Aggressive (~60% target)**: Comprehensive transformation with safety caps
+            - **Target: ~10% Savings**: Light automation improvements, proven approaches
+            - **Target: ~20% Savings**: Moderate automation with enhanced testing  
+            - **Target: ~30% Savings**: Aggressive automation transformation
             
             **Key Assumptions:**
             - Direct savings apply to development phases (Discover-Deploy)
