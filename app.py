@@ -111,14 +111,25 @@ def create_sidebar_controls(model):
     
     maturity_levels = {}
     for initiative in get_initiatives():
-        maturity_levels[initiative] = st.sidebar.slider(
+        # Get the description for this initiative
+        from config import get_initiative_description, get_maturity_description
+        initiative_desc = get_initiative_description(initiative)
+        
+        # Create the slider
+        maturity_value = st.sidebar.slider(
             initiative.replace('_', ' '),
             min_value=0,
             max_value=100,
             value=50,
             step=5,
-            help=f"Maturity level for {initiative}"
+            help=f"{initiative_desc}"
         )
+        
+        # Show current maturity level description
+        current_desc = get_maturity_description(initiative, maturity_value)
+        st.sidebar.caption(f"📊 Current level: {current_desc}")
+        
+        maturity_levels[initiative] = maturity_value
     
     # Scenario selection
     st.sidebar.header("Scenario Selection")
@@ -715,9 +726,9 @@ def main():
             - Manual testing reduction: 35%
             
             **Scenario Definitions:**
-            - **Moderate (10%)**: Conservative improvements using matrix values
-            - **Elevated (20%)**: Enhanced benefits from higher automation
-            - **Aggressive (30%)**: Near-maximum credible improvements with caps
+            - **Baseline Matrix**: Conservative improvements using matrix values
+            - **Enhanced (20% boost)**: Enhanced benefits from higher automation
+            - **Maximum (30% boost)**: Near-maximum credible improvements with caps
             
             **Key Assumptions:**
             - Direct savings apply to development phases (Discover-Deploy)
@@ -725,6 +736,37 @@ def main():
             - Risk weights multiply modeled hours for risk assessment
             - Maximum total cost reduction capped at 30%
             """)
+        
+        # Initiative Maturity Guide
+        with st.expander("📚 Initiative Maturity Level Guide"):
+            from config import INITIATIVE_MATURITY_DEFINITIONS
+            
+            st.markdown("""
+            **Understanding Maturity Levels:**
+            
+            Maturity levels represent how well your organization has adopted each efficiency initiative:
+            - **0%**: Not implemented
+            - **25%**: Basic implementation
+            - **50%**: Standard adoption
+            - **75%**: Advanced implementation
+            - **100%**: Fully optimized
+            """)
+            
+            st.markdown("**Initiative Details:**")
+            for initiative, definitions in INITIATIVE_MATURITY_DEFINITIONS.items():
+                st.markdown(f"**{initiative}**")
+                st.markdown(f"*{definitions['description']}*")
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.markdown(f"• **0%**: {definitions['0%']}")
+                    st.markdown(f"• **50%**: {definitions['50%']}")
+                with col2:
+                    st.markdown(f"• **25%**: {definitions['25%']}")
+                    st.markdown(f"• **75%**: {definitions['75%']}")
+                    st.markdown(f"• **100%**: {definitions['100%']}")
+                
+                st.markdown("---")
     
     except Exception as e:
         st.error(f"Error running calculations: {e}")

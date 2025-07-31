@@ -155,6 +155,92 @@ INITIATIVE_FALLBACK = [
     "Integration Code Reuse"
 ]
 
+# Maturity level definitions for each initiative
+INITIATIVE_MATURITY_DEFINITIONS = {
+    "Modernization Studio": {
+        "description": "Ellucian's modern development platform and tooling",
+        "0%": "No use of Modernization Studio tools",
+        "25%": "Basic setup, occasional use for simple tasks",
+        "50%": "Regular use for standard development, some team training",
+        "75%": "Well-integrated into workflow, most developers proficient",
+        "100%": "Fully adopted, optimized workflows, advanced features used"
+    },
+    "AI/Automation": {
+        "description": "AI-powered code generation, automated workflows, and intelligent tooling",
+        "0%": "No AI/automation tools in development process",
+        "25%": "Basic AI code suggestions, simple automation scripts",
+        "50%": "Regular use of AI coding assistants, some automated workflows",
+        "75%": "Advanced AI integration, automated testing/deployment pipelines",
+        "100%": "Full AI-driven development, comprehensive automation ecosystem"
+    },
+    "N2S CARM": {
+        "description": "Navigate-to-SaaS Change and Release Management processes",
+        "0%": "Traditional manual change management",
+        "25%": "Basic N2S processes documented, limited adoption",
+        "50%": "Standard N2S workflows in place, team partially trained",
+        "75%": "Well-established processes, good compliance and metrics",
+        "100%": "Optimized N2S CARM, full automation, continuous improvement"
+    },
+    "Preconfigured Envs": {
+        "description": "Pre-built development, testing, and deployment environments",
+        "0%": "Manual environment setup for each project",
+        "25%": "Some standardized environments, mostly manual setup",
+        "50%": "Standard pre-configured environments available and used",
+        "75%": "Comprehensive environment library, automated provisioning",
+        "100%": "Fully automated, optimized environments with instant deployment"
+    },
+    "Automated Testing": {
+        "description": "Automated unit, integration, and end-to-end testing frameworks",
+        "0%": "Primarily manual testing processes",
+        "25%": "Basic unit tests, some automation for critical paths",
+        "50%": "Good test coverage, automated regression testing",
+        "75%": "Comprehensive test automation, CI/CD integration",
+        "100%": "Full test automation, AI-driven testing, performance optimization"
+    },
+    "EDCC": {
+        "description": "Ellucian Data Center Cloud infrastructure and services",
+        "0%": "On-premise infrastructure, manual deployments",
+        "25%": "Basic cloud migration, some EDCC services adopted",
+        "50%": "Standard EDCC deployment, cloud-native development",
+        "75%": "Advanced EDCC features, optimized cloud architecture",
+        "100%": "Full EDCC optimization, serverless, auto-scaling, cost-optimized"
+    },
+    "Integration Code Reuse": {
+        "description": "Standardized integration patterns, reusable components and APIs",
+        "0%": "Custom integrations built from scratch each time",
+        "25%": "Some common patterns documented, limited reuse",
+        "50%": "Standard integration library, moderate component reuse",
+        "75%": "Comprehensive reusable component library, good adoption",
+        "100%": "Fully optimized integration platform, API-first, maximum reuse"
+    }
+}
+
+# Helper function to get maturity level description
+def get_maturity_description(initiative: str, level: int) -> str:
+    """Get description for a specific maturity level of an initiative"""
+    if initiative not in INITIATIVE_MATURITY_DEFINITIONS:
+        return f"{level}% maturity"
+    
+    definitions = INITIATIVE_MATURITY_DEFINITIONS[initiative]
+    
+    # Find the closest defined level
+    if level == 0:
+        return definitions["0%"]
+    elif level <= 25:
+        return definitions["25%"]
+    elif level <= 50:
+        return definitions["50%"]
+    elif level <= 75:
+        return definitions["75%"]
+    else:
+        return definitions["100%"]
+
+def get_initiative_description(initiative: str) -> str:
+    """Get the main description of an initiative"""
+    if initiative in INITIATIVE_MATURITY_DEFINITIONS:
+        return INITIATIVE_MATURITY_DEFINITIONS[initiative]["description"]
+    return f"Efficiency initiative: {initiative}"
+
 # =============================================================================
 # HELPER FUNCTIONS
 # =============================================================================
