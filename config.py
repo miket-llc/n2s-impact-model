@@ -41,6 +41,131 @@ DEFAULT_RISK_WEIGHTS = {
     'Post Go-Live': 7
 }
 
+# Risk level definitions and guidelines
+RISK_LEVEL_DEFINITIONS = {
+    "general": {
+        "description": ("Risk weights multiply your modeled hours to account for project "
+                       "complexity, team experience, and potential issues. Higher weights "
+                       "= more conservative estimates."),
+        "0.5": "Very low risk - Simple, well-understood work",
+        "1.0": "Low risk - Standard complexity, experienced team",
+        "2.0": "Moderate risk - Some complexity or unknowns",
+        "3.0": "Medium-high risk - Significant complexity",
+        "5.0": "High risk - Major complexity, new technology",
+        "7.0": "Very high risk - Critical path, many unknowns",
+        "10.0": "Maximum risk - Experimental, high uncertainty"
+    },
+    "phases": {
+        "Discover": {
+            "description": "Requirements gathering, stakeholder alignment, scope definition",
+            "typical_risks": [
+                "Unclear or changing requirements",
+                "Stakeholder availability and alignment",
+                "Scope creep potential",
+                "Business process complexity"
+            ],
+            "low_risk": "Well-defined project with clear requirements",
+            "high_risk": "Complex business transformation with unclear scope"
+        },
+        "Plan": {
+            "description": "Project planning, resource allocation, timeline development",
+            "typical_risks": [
+                "Resource availability constraints",
+                "Dependency management complexity",
+                "Timeline optimization challenges",
+                "Cross-team coordination needs"
+            ],
+            "low_risk": "Standard project with available resources",
+            "high_risk": "Multi-team project with resource constraints"
+        },
+        "Design": {
+            "description": "Architecture design, technical specifications, UI/UX design",
+            "typical_risks": [
+                "Technical architecture complexity",
+                "Integration design challenges",
+                "Performance requirements",
+                "Scalability considerations"
+            ],
+            "low_risk": "Standard design patterns and proven architecture",
+            "high_risk": "New architecture or complex integration requirements"
+        },
+        "Build": {
+            "description": "Code development, component creation, feature implementation",
+            "typical_risks": [
+                "Technical implementation complexity",
+                "Third-party integration challenges",
+                "Code quality and maintainability",
+                "Team skill gaps"
+            ],
+            "low_risk": "Standard development with experienced team",
+            "high_risk": "Complex features with new technology stack"
+        },
+        "Test": {
+            "description": "Testing execution, defect resolution, quality assurance",
+            "typical_risks": [
+                "Test environment stability",
+                "Complex test scenario coverage",
+                "Integration testing challenges",
+                "Performance testing complexity"
+            ],
+            "low_risk": "Well-automated testing with stable environments",
+            "high_risk": "Complex integration testing with manual processes"
+        },
+        "Deploy": {
+            "description": "Production deployment, release management, go-live activities",
+            "typical_risks": [
+                "Production environment issues",
+                "Data migration complexity",
+                "Rollback procedure needs",
+                "User training and adoption"
+            ],
+            "low_risk": "Standard deployment with proven processes",
+            "high_risk": "Complex migration with high business impact"
+        },
+        "Post Go-Live": {
+            "description": "Production support, issue resolution, user adoption",
+            "typical_risks": [
+                "Production support complexity",
+                "User adoption challenges",
+                "Performance optimization needs",
+                "Ongoing maintenance requirements"
+            ],
+            "low_risk": "Standard support for familiar system",
+            "high_risk": "Complex system with high support demands"
+        }
+    }
+}
+
+def get_risk_level_description(weight: float) -> str:
+    """Get description for a specific risk weight level"""
+    definitions = RISK_LEVEL_DEFINITIONS["general"]
+    
+    if weight <= 0.7:
+        return definitions["0.5"]
+    elif weight <= 1.2:
+        return definitions["1.0"]
+    elif weight <= 2.5:
+        return definitions["2.0"]
+    elif weight <= 4.0:
+        return definitions["3.0"]
+    elif weight <= 6.0:
+        return definitions["5.0"]
+    elif weight <= 8.0:
+        return definitions["7.0"]
+    else:
+        return definitions["10.0"]
+
+def get_phase_risk_info(phase: str) -> dict:
+    """Get risk information for a specific phase"""
+    if phase in RISK_LEVEL_DEFINITIONS["phases"]:
+        return RISK_LEVEL_DEFINITIONS["phases"][phase]
+    return {
+        "description": f"Risk factors for {phase} phase",
+        "typical_risks": [],
+        "low_risk": "Standard complexity",
+        "high_risk": "High complexity"
+    }
+
 # =============================================================================
 # SCENARIO DEFINITIONS
 # =============================================================================

@@ -160,16 +160,36 @@ def create_sidebar_controls(model):
     st.sidebar.header("Risk Weight Multipliers")
     st.sidebar.caption("Higher weights = higher risk phases")
     
+    # Add explanation of what risk weights do
+    from config import RISK_LEVEL_DEFINITIONS
+    st.sidebar.info(f"ℹ️ {RISK_LEVEL_DEFINITIONS['general']['description']}")
+    
     risk_weights = {}
     for phase in PHASE_ORDER:
-        risk_weights[phase] = st.sidebar.slider(
+        # Get phase-specific risk information
+        from config import get_phase_risk_info, get_risk_level_description
+        phase_info = get_phase_risk_info(phase)
+        
+        # Create help text with phase description and typical risks
+        risk_bullets = "\\n• ".join(phase_info['typical_risks'])
+        help_text = (f"{phase_info['description']}\\n\\n"
+                    f"Typical risks:\\n• {risk_bullets}")
+        
+        # Create the slider
+        risk_value = st.sidebar.slider(
             f"{phase} Risk Weight",
             min_value=0.5,
             max_value=10.0,
             value=float(DEFAULT_RISK_WEIGHTS[phase]),
             step=0.5,
-            help=f"Risk multiplier for {phase} phase"
+            help=help_text
         )
+        
+        # Show current risk level description
+        risk_desc = get_risk_level_description(risk_value)
+        st.sidebar.caption(f"⚠️ Current risk: {risk_desc}")
+        
+        risk_weights[phase] = risk_value
     
     # Simplified cost avoidance toggle - removed since we have the dropdown
     
@@ -765,6 +785,51 @@ def main():
                     st.markdown(f"• **25%**: {definitions['25%']}")
                     st.markdown(f"• **75%**: {definitions['75%']}")
                     st.markdown(f"• **100%**: {definitions['100%']}")
+                
+                st.markdown("---")
+        
+        # Risk Assessment Guide
+        with st.expander("⚠️ Risk Assessment Guide"):
+            from config import RISK_LEVEL_DEFINITIONS
+            
+            st.markdown("""
+            **Understanding Risk Weights:**
+            
+            Risk weights multiply your modeled hours to create more conservative estimates based on project complexity and uncertainty. Use higher weights for riskier phases.
+            """)
+            
+            # General risk level guide
+            st.markdown("**Risk Level Guide:**")
+            general_risks = RISK_LEVEL_DEFINITIONS["general"]
+            col1, col2 = st.columns(2)
+            with col1:
+                st.markdown(f"• **0.5x**: {general_risks['0.5']}")
+                st.markdown(f"• **2.0x**: {general_risks['2.0']}")
+                st.markdown(f"• **5.0x**: {general_risks['5.0']}")
+            with col2:
+                st.markdown(f"• **1.0x**: {general_risks['1.0']}")
+                st.markdown(f"• **3.0x**: {general_risks['3.0']}")
+                st.markdown(f"• **7.0x**: {general_risks['7.0']}")
+            
+            st.markdown("---")
+            
+            # Phase-specific risk information
+            st.markdown("**Phase-Specific Risk Factors:**")
+            phase_risks = RISK_LEVEL_DEFINITIONS["phases"]
+            
+            for phase, info in phase_risks.items():
+                st.markdown(f"**{phase} Phase**")
+                st.markdown(f"*{info['description']}*")
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.markdown("**Typical Risk Factors:**")
+                    for risk in info['typical_risks']:
+                        st.markdown(f"• {risk}")
+                
+                with col2:
+                    st.markdown(f"**Low Risk Example:** {info['low_risk']}")
+                    st.markdown(f"**High Risk Example:** {info['high_risk']}")
                 
                 st.markdown("---")
     
