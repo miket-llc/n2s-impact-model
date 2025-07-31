@@ -174,7 +174,7 @@ class N2SEfficiencyModel:
             industry_benchmarks = INDUSTRY_BENCHMARKS
         
         # Apply maturity levels (convert percentages to decimal multipliers)
-        effective_matrix = self.matrix_data.copy()
+        effective_matrix = self.matrix_data.copy().astype(float)  # Ensure float type
         for initiative in effective_matrix.index:
             if initiative in maturity_levels:
                 maturity_multiplier = maturity_levels[initiative] / 100.0

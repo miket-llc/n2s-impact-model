@@ -155,9 +155,15 @@ def create_sidebar_controls():
     st.sidebar.subheader("📈 Initiative Maturity Levels")
     
     maturity_levels = {}
+    
+    # First, set all initiatives to 0 (disabled by default)
+    for initiative in INITIATIVE_FALLBACK:
+        maturity_levels[initiative] = 0
+    
+    # Then show sliders only for enabled initiatives
     for initiative in available_initiatives:
         if initiative_weights[initiative] > 0:  # Only show enabled initiatives
-            help_text = get_maturity_description(initiative)
+            help_text = get_maturity_description(initiative, 50)  # Use 50% as example level
             caption = f"Weight: {initiative_weights[initiative]*100:.0f}% | {help_text}"
             
             maturity_levels[initiative] = st.sidebar.slider(
