@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.12.11 - Business-Focused Savings Targets (10%, 20%, 30%)"
+APP_VERSION = "v3.0.0 - CMMI-Inspired Maturity Assessment Framework"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
