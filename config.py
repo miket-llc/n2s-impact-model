@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.12.6 - COMPLETE Linter Fix (All Violations)"
+APP_VERSION = "v2.12.9 - Major model.py Cleanup + Modern 88-char Standards"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
@@ -315,9 +315,9 @@ INITIATIVE_MATURITY_DEFINITIONS = {
         "100%": "Full AI-driven development, comprehensive automation ecosystem"
     },
     "N2S CARM": {
-        "description": "Navigate-to-SaaS Change and Release Management processes",
+        "description": "Navigate-to-SaaS Change and Release Management processes", 
         "0%": "Traditional manual change management",
-        "25%": "Basic N2S processes documented, limited adoption",
+        "25%": "Basic N2S processes documented, limited adoption", 
         "50%": "Standard N2S workflows in place, team partially trained",
         "75%": "Well-established processes, good compliance and metrics",
         "100%": "Optimized N2S CARM, full automation, continuous improvement"
@@ -344,7 +344,7 @@ INITIATIVE_MATURITY_DEFINITIONS = {
         "25%": "Basic cloud migration, some EDCC services adopted",
         "50%": "Standard EDCC deployment, cloud-native development",
         "75%": "Advanced EDCC features, optimized cloud architecture",
-        "100%": "Full EDCC optimization, serverless, auto-scaling, cost-optimized"
+        "100%": "Full EDCC optimization, serverless, auto-scaling"
     },
     "Integration Code Reuse": {
         "description": "Standardized integration patterns, reusable components and APIs",

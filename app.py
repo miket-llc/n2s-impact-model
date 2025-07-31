@@ -64,7 +64,7 @@ def create_sidebar_controls():
         get_initiative_description, get_maturity_description,
         RISK_LEVEL_DEFINITIONS, get_phase_risk_info,
         get_risk_level_description, INITIATIVE_FALLBACK, 
-        INDUSTRY_BENCHMARKS
+        INDUSTRY_BENCHMARKS, COST_AVOIDANCE_OPTIONS
     )
     
     st.sidebar.title("Model Parameters")
@@ -104,14 +104,14 @@ def create_sidebar_controls():
         "Development Efficiency Scenario",
         options=list(SCENARIOS.keys()),
         index=0,  # Default to conservative "Baseline Matrix"
-        help="Choose the level of efficiency improvements to model"
+        help="Choose efficiency improvement level"
     )
     
     cost_avoidance_selection = st.sidebar.selectbox(
         "Cost Avoidance Model",
         options=list(COST_AVOIDANCE_OPTIONS.keys()),
         index=3,  # Default to "Moderate (2.5x)"
-        help="How much additional value beyond direct development savings?"
+        help="Additional value beyond direct savings"
     )
     
     cost_avoidance_config = COST_AVOIDANCE_OPTIONS[cost_avoidance_selection]
@@ -146,13 +146,8 @@ def create_sidebar_controls():
     # Industry Benchmarks
     st.sidebar.subheader("Industry Benchmarks")
     st.sidebar.markdown("""
-    **Adjust these benchmarks based on your organization's current automation maturity:**
-    
-    **Research Sources:**
-    - Gartner/Forrester automation studies
-    - McKinsey quality improvement research  
-    - Perfecto/Testlio testing efficiency reports
-    - IBM Systems Sciences shift-left analysis
+    **Adjust based on your organization's automation maturity:**
+    Sources: Gartner, McKinsey, Perfecto/Testlio, IBM studies
     """)
     
     # Testing Phase Reduction
@@ -164,19 +159,9 @@ def create_sidebar_controls():
         value=float(INDUSTRY_BENCHMARKS['testing_phase_reduction']),
         step=0.05,
         format="%.0f%%",
-        help="""How much can automated testing reduce overall testing time?
-
-**Research Base:** Perfecto/Testlio studies show 30-50% reduction in 
-testing cycles with proper automation.
-
-**Your Context:**
-• **Legacy/Manual (20-30%)**: Heavy manual testing, minimal automation
-• **Moderate (35-50%)**: Some automation, mixed manual/automated
-• **Advanced (55-70%)**: Comprehensive test automation suites
-• **Best-in-Class (70%+)**: AI-driven testing, full CI/CD integration
-
-**Higher values appropriate for:** Organizations transitioning from manual to automated testing
-**Lower values appropriate for:** Already automated organizations with limited additional gains"""
+        help="""Testing time reduction from automation.
+30-50% typical (Perfecto/Testlio studies).
+Higher for manual→automated transitions."""
     )
     
     # Manual Testing Reduction  
@@ -187,16 +172,8 @@ testing cycles with proper automation.
         value=float(INDUSTRY_BENCHMARKS['manual_testing_reduction']),
         step=0.05,
         format="%.0f%%",
-        help="""How much manual testing effort can be eliminated through automation?
-
-**Research Base:** Industry studies show 35-45% reduction in manual testing effort.
-
-**Your Context:**
-• **High Manual (50-70%)**: Currently 80%+ manual testing
-• **Mixed (30-50%)**: 50/50 manual vs automated testing
-• **Automated (15-35%)**: Already mostly automated testing
-
-**Consider your current state:** Higher reduction rates apply to organizations with significant manual testing overhead."""
+        help="""Manual testing effort elimination via automation.
+35-45% typical reduction. Higher for manual-heavy organizations."""
     )
     
     # Quality Improvement
@@ -208,19 +185,8 @@ testing cycles with proper automation.
         value=float(INDUSTRY_BENCHMARKS['quality_improvement']),
         step=0.05,
         format="%.0f%%",
-        help="""Overall improvement in software quality from shift-left practices.
-
-**Research Base:** McKinsey studies show 20% average quality improvement from shift-left methodologies.
-
-**Factors:**
-• **Early defect detection** through better testing
-• **Improved code quality** through better tools/processes  
-• **Reduced post-production issues** from better validation
-
-**Your Context:**
-• **High Defect Rate (30-50%)**: Currently experiencing significant quality issues
-• **Average (15-25%)**: Industry-standard quality metrics
-• **High Quality (5-15%)**: Already high-quality processes with limited improvement potential"""
+                help="""Quality improvement from shift-left practices.
+20% average improvement (McKinsey). Higher for high-defect orgs."""
     )
     
     defect_reduction = st.sidebar.slider(
@@ -230,29 +196,22 @@ testing cycles with proper automation.
         value=float(INDUSTRY_BENCHMARKS['post_release_defect_reduction']),
         step=0.05,
         format="%.0f%%",
-        help="""Reduction in post-production defects from better early-stage practices.
-
-**Research Base:** IBM studies show 25% average reduction in production defects with shift-left.
-
-**Impact Areas:**
-• **Fewer hotfixes** and emergency releases
-• **Reduced support overhead** and user escalations
-• **Lower maintenance burden** on development teams
-
-**Your Context:**
-• **High Production Issues (40-60%)**: Frequent post-release defects
-• **Moderate (20-30%)**: Occasional production issues  
-• **Stable (10-20%)**: Already low defect rates"""
+                help="""Post-production defect reduction from shift-left.
+25% average reduction (IBM). Higher for issue-prone systems."""
     )
     
-    # Package the industry benchmarks
+    # Package industry benchmarks
     custom_benchmarks = {
         'testing_phase_reduction': testing_reduction,
         'manual_testing_reduction': manual_testing_reduction,
         'quality_improvement': quality_improvement,
         'post_release_defect_reduction': defect_reduction,
-        'test_automation_cost_reduction': INDUSTRY_BENCHMARKS['test_automation_cost_reduction'],
-        'defect_fix_cost_multipliers': INDUSTRY_BENCHMARKS['defect_fix_cost_multipliers']
+        'test_automation_cost_reduction': INDUSTRY_BENCHMARKS[
+            'test_automation_cost_reduction'
+        ],
+        'defect_fix_cost_multipliers': INDUSTRY_BENCHMARKS[
+            'defect_fix_cost_multipliers'
+        ]
     }
     
     # Initiative Maturity Levels  
@@ -298,7 +257,7 @@ testing cycles with proper automation.
     
     # Initiative Selection
     st.sidebar.subheader("Initiative Selection")
-    st.sidebar.markdown("**Select which N2S initiatives your organization has access to:**")
+    st.sidebar.markdown("**Select available N2S initiatives:**")
     
     initiative_weights = {}
     available_initiatives = []
