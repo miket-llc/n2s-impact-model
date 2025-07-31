@@ -301,28 +301,24 @@ def create_sidebar_controls():
     st.sidebar.markdown("**Adjust based on your project type:**")
     
     phase_allocation = {}
-    remaining = 100
     
-    for i, phase in enumerate(PHASE_ORDER):
-        if i == len(PHASE_ORDER) - 1:  # Last phase gets remainder
-            phase_allocation[phase] = remaining
-            st.sidebar.metric(f"{phase} %", f"{remaining}%")
-        else:
-            default_value = DEFAULT_PHASE_ALLOCATION[phase]
-            phase_allocation[phase] = st.sidebar.slider(
-                f"{phase} %",
-                min_value=1,
-                max_value=50,
-                value=default_value,
-                step=1,
-                help=f"Percentage of total project time spent in {phase} phase"
-            )
-            remaining -= phase_allocation[phase]
+    # Show sliders for all phases
+    for phase in PHASE_ORDER:
+        default_value = DEFAULT_PHASE_ALLOCATION[phase]
+        phase_allocation[phase] = st.sidebar.slider(
+            f"{phase} %",
+            min_value=1,
+            max_value=50,
+            value=default_value,
+            step=1,
+            help=f"Percentage of total project time spent in {phase} phase"
+        )
     
     # Validation
     total_allocation = sum(phase_allocation.values())
     if abs(total_allocation - 100) > 0.1:
         st.sidebar.error(f"Phase allocation must sum to 100% (currently {total_allocation}%)")
+        st.sidebar.info("Adjust the sliders above so they total exactly 100%")
     
     # =============================================================================
     # RISK ASSESSMENT
@@ -727,19 +723,97 @@ def main():
     """Main application function"""
     load_custom_css()
     
-    # Header
-    st.title("Navigate-to-SaaS Efficiency Model")
-    
-    # Version indicator for deployment tracking
+    # Title and version
     from config import APP_VERSION
-    st.markdown(f"**{APP_VERSION}** | *Updated: {datetime.now().strftime('%Y-%m-%d %H:%M')} UTC*")
+    st.title("N2S Impact Modeling Tool")
+    st.markdown(f"*{APP_VERSION}*")
     
-    st.markdown("""
-    **Quantifying Professional Services Efficiency Gains**  
-    Interactive modeling tool for Ellucian's N2S "shift-left" delivery methodology
-    """)
+    # Getting Started Guide for Novices
+    with st.expander("Getting Started Guide - How This Model Works", expanded=False):
+        st.markdown("""
+        ## Understanding the N2S Impact Model
+        
+        This tool helps you estimate the time and cost savings from implementing Next to Source (N2S) efficiency initiatives across your development projects.
+        
+        ### The Big Picture: How It Works
+        
+        **1. Initiatives Work Across All Development Phases**
+        Your project has 7 phases: Discover → Plan → Design → Build → Test → Deploy → Post Go-Live
+        
+        Each N2S initiative (like "Automated Testing" or "AI/Automation") can save hours in multiple phases:
+        - **Automated Testing** saves the most in Test phase, but also helps in Build and Deploy
+        - **Modernization Studio** primarily helps Build and Design phases
+        - **Integration Code Reuse** saves time in Build, Test, and Deploy phases
+        
+        The model calculates how much time each initiative saves in each phase, then adds them up.
+        
+        ### Key Concepts You Need to Understand
+        
+        #### **Cost Savings vs Cost Avoidance**
+        - **Cost Savings** = Direct money saved during development (fewer hours = lower cost)
+        - **Cost Avoidance** = Future costs you avoid after go-live (fewer bugs, faster fixes, less maintenance)
+        
+        **Think of it this way:**
+        - Cost Savings: "We finished the project $50k under budget"
+        - Cost Avoidance: "Because we built it better, we're saving $20k/month in support costs"
+        
+        #### **How to Set Cost Avoidance:**
+        - **Conservative (1.5x)**: Very risk-averse, minimal long-term benefits
+        - **Moderate (2.5x)**: Industry average for shift-left practices
+        - **Aggressive (4-6x)**: High-maturity organizations with strong DevOps practices
+        
+        ### Step-by-Step: How to Use This Model
+        
+        #### **Step 1: Set Your Project Context (Do This First)**
+        1. **Total Project Hours**: How big is your project? (5k = small, 20k = medium, 50k = large)
+        2. **Phase Allocation**: What type of project?
+           - **Greenfield/New**: More Design (20%) and Build (30%)
+           - **Maintenance**: More Test (25%) and Deploy (15%)
+           - **Migration**: More Discover (10%) and Plan (15%)
+        3. **Cost Avoidance Model**: Start with "Moderate (2.5x)" - adjust later based on your organization's maturity
+        
+        #### **Step 2: Choose Your Initiatives (Core Decision)**
+        - **Enable only initiatives your organization actually has access to**
+        - **Weight them by relevance** (100% = fully applicable, 50% = partially applicable)
+        - Common starting point: Enable all at 100% weight, then adjust down
+        
+        #### **Step 3: Set Industry Benchmarks (Important!)**
+        These reflect your organization's **current state automation maturity**:
+        
+        **If you're a legacy organization (lots of manual processes):**
+        - Testing Phase Reduction: 50-70% (high savings potential)
+        - Manual Testing Reduction: 60-70% (lots of manual work to automate)
+        - Quality Improvement: 30-40% (big gains from better practices)
+        
+        **If you're already modern/automated:**
+        - Testing Phase Reduction: 20-35% (already automated, smaller gains)
+        - Manual Testing Reduction: 15-30% (less manual work to eliminate)
+        - Quality Improvement: 10-20% (incremental improvements only)
+        
+        #### **Step 4: Fine-Tune the Details (Do This Last)**
+        1. **Initiative Maturity Levels**: Start with 50% for all, then adjust based on your organization's adoption
+        2. **Blended Hourly Rate**: Adjust for your location and team composition
+        3. **Risk Weights**: Start with defaults, increase for high-risk/complex phases
+        
+        ### What the Results Tell You
+        
+        - **Hours Saved**: Direct time reduction in your project
+        - **Cost Savings**: Money saved during development 
+        - **Cost Avoidance**: Future operational savings
+        - **Total Financial Benefit**: Combined impact over time
+        
+        ### Pro Tips for Realistic Results
+        
+        1. **Start Conservative**: It's better to under-promise and over-deliver
+        2. **Focus on 2-3 Key Initiatives**: Don't try to implement everything at once
+        3. **Adjust Industry Benchmarks First**: This has the biggest impact on results
+        4. **Validate with Pilots**: Run small pilots to validate your assumptions before scaling
+        
+        ---
+        **Ready to start? Work through Steps 1-4 above, then review your results!**
+        """)
     
-    # Initialize model
+    # Load model
     model = initialize_model()
     
     # Create sidebar controls
