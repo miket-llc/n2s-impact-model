@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.10.0 - Reorganized Sidebar for Better User Flow"
+APP_VERSION = "v2.10.1 - Reorganized Sidebar (FORCED REBUILD)"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054

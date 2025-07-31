@@ -4,4 +4,4 @@ openpyxl>=3.1.0
 plotly>=5.15.0
 numpy>=1.24.0
 
-# Force rebuild - v2.8.0 Clean UI without emojis 
+# Force rebuild - v2.10.0 Reorganized sidebar for better user flow 
