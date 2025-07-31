@@ -12,7 +12,7 @@ from datetime import datetime
 
 from model import N2SEfficiencyModel
 from config import (
-    DEFAULT_PHASE_ALLOCATION, DEFAULT_RISK_WEIGHTS, PHASE_ORDER, SCENARIOS,
+    DEFAULT_PHASE_ALLOCATION, DEFAULT_RISK_WEIGHTS, PHASE_ORDER,
     COST_AVOIDANCE_OPTIONS, get_phase_colors, format_currency, format_hours,
     validate_scenario_results
 )

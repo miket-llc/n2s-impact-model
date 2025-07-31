@@ -7,7 +7,7 @@ import pandas as pd
 from typing import Dict, Tuple, Optional, List
 
 from config import (
-    PHASE_ORDER, SCENARIOS, DEFAULT_PHASE_ALLOCATION, DEFAULT_RISK_WEIGHTS,
+    PHASE_ORDER, DEFAULT_PHASE_ALLOCATION, DEFAULT_RISK_WEIGHTS,
     INDUSTRY_BENCHMARKS, calculate_baseline_hours, INITIATIVE_FALLBACK
 )
 
@@ -374,9 +374,12 @@ def run_model_scenario(
     model = N2SEfficiencyModel()
     model.create_sample_data()
     
-    # Generate dynamic scenario config
-    from config import calculate_dynamic_scaling
-    scenario_config = calculate_dynamic_scaling(target_savings)
+    # Generate simple scenario config for utility function
+    scenario_config = {
+        'target_percentage': target_savings,
+        'current_maturity': {'maturity_level': 2},  # Default to Level 2 for utility
+        'description': f"Utility run with {target_savings}% target"
+    }
     
     effective_deltas = model.apply_maturity_and_scenario(
         maturity_levels, scenario_config, None
