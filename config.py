@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v2.11.1 - Optimized Sidebar Order: Complete & Fixed"
+APP_VERSION = "v2.12.0 - Initiative Selection Moved to End (FORCED REBUILD)"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054

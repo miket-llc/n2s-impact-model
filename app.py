@@ -121,43 +121,6 @@ def create_sidebar_controls():
     cost_avoidance_config = COST_AVOIDANCE_OPTIONS[cost_avoidance_selection]
     
     # =============================================================================
-    # INITIATIVE SELECTION & WEIGHTS
-    # =============================================================================
-    
-    st.sidebar.subheader("Initiative Selection")
-    st.sidebar.markdown("**Select which N2S initiatives your organization has access to:**")
-    
-    initiative_weights = {}
-    available_initiatives = []
-    
-    for initiative in INITIATIVE_FALLBACK:
-        col1, col2 = st.sidebar.columns([3, 1])
-        
-        with col1:
-            enabled = st.checkbox(
-                initiative,
-                value=True,
-                key=f"enable_{initiative}",
-                help=get_initiative_description(initiative)
-            )
-        
-        with col2:
-            if enabled:
-                weight = st.number_input(
-                    "Weight",
-                    min_value=0,
-                    max_value=100,
-                    value=100,
-                    step=5,
-                    key=f"weight_{initiative}",
-                    help="Relevance to your project (0-100%)"
-                )
-                initiative_weights[initiative] = weight / 100.0
-                available_initiatives.append(initiative)
-            else:
-                initiative_weights[initiative] = 0.0
-    
-    # =============================================================================
     # PHASE ALLOCATION
     # =============================================================================
     
@@ -299,33 +262,15 @@ def create_sidebar_controls():
     }
     
     # =============================================================================
-    # INITIATIVE MATURITY LEVELS
+    # INITIATIVE MATURITY LEVELS  
     # =============================================================================
     
     st.sidebar.subheader("Initiative Maturity Levels")
     
+    # First, set all initiatives to default values for enabled ones
     maturity_levels = {}
-    
-    # First, set all initiatives to 0 (disabled by default)
     for initiative in INITIATIVE_FALLBACK:
-        maturity_levels[initiative] = 0
-    
-    # Then show sliders only for enabled initiatives
-    for initiative in available_initiatives:
-        if initiative_weights[initiative] > 0:  # Only show enabled initiatives
-            help_text = get_maturity_description(initiative, 50)  # Use 50% as example level
-            caption = f"Weight: {initiative_weights[initiative]*100:.0f}% | {help_text}"
-            
-            maturity_levels[initiative] = st.sidebar.slider(
-                f"{initiative}",
-                min_value=0,
-                max_value=100,
-                value=50,
-                step=5,
-                help=f"Current implementation maturity for {initiative}",
-                key=f"maturity_{initiative}"
-            )
-            st.sidebar.caption(caption)
+        maturity_levels[initiative] = 50  # Default all to 50% for now
     
     # =============================================================================
     # RISK ASSESSMENT
@@ -362,6 +307,62 @@ def create_sidebar_controls():
         # Real-time risk level description
         risk_level_desc = get_risk_level_description(risk_weights[phase])
         st.sidebar.caption(f"{risk_level_desc}")
+    
+    # =============================================================================
+    # INITIATIVE SELECTION & WEIGHTS (MOVED TO END)
+    # =============================================================================
+    
+    st.sidebar.subheader("Initiative Selection")
+    st.sidebar.markdown("**Select which N2S initiatives your organization has access to:**")
+    
+    initiative_weights = {}
+    available_initiatives = []
+    
+    for initiative in INITIATIVE_FALLBACK:
+        col1, col2 = st.sidebar.columns([3, 1])
+        
+        with col1:
+            enabled = st.checkbox(
+                initiative,
+                value=True,
+                key=f"enable_{initiative}",
+                help=get_initiative_description(initiative)
+            )
+        
+        with col2:
+            if enabled:
+                weight = st.number_input(
+                    "Weight",
+                    min_value=0,
+                    max_value=100,
+                    value=100,
+                    step=5,
+                    key=f"weight_{initiative}",
+                    help="Relevance to your project (0-100%)"
+                )
+                initiative_weights[initiative] = weight / 100.0
+                available_initiatives.append(initiative)
+            else:
+                initiative_weights[initiative] = 0.0
+    
+    # Update maturity levels based on selection
+    for initiative in INITIATIVE_FALLBACK:
+        if initiative in available_initiatives and initiative_weights[initiative] > 0:
+            help_text = get_maturity_description(initiative, 50)
+            caption = f"Weight: {initiative_weights[initiative]*100:.0f}% | {help_text}"
+            
+            maturity_levels[initiative] = st.sidebar.slider(
+                f"{initiative} Maturity",
+                min_value=0,
+                max_value=100,
+                value=50,
+                step=5,
+                help=f"Current implementation maturity for {initiative}",
+                key=f"maturity_{initiative}"
+            )
+            st.sidebar.caption(caption)
+        else:
+            maturity_levels[initiative] = 0  # Disabled initiatives
     
     return {
         'total_hours': total_hours,
