@@ -463,9 +463,10 @@ def create_cost_breakdown_by_phase_chart(cost_results, summary_df):
         x=phases,
         y=baseline_costs,
         name='Baseline Cost',
-        marker_color='lightcoral',
+        marker_color='#8D33EF',
         text=[format_currency(c) for c in baseline_costs],
-        textposition='outside'
+        textposition='outside',
+        textfont=dict(size=11, color='black')
     ))
     
     # Modeled costs (what we actually spend after initiatives)
@@ -473,9 +474,10 @@ def create_cost_breakdown_by_phase_chart(cost_results, summary_df):
         x=phases,
         y=modeled_costs,
         name='Actual Cost (After Initiatives)',
-        marker_color='lightblue',
+        marker_color='#AA66F3',
         text=[format_currency(c) for c in modeled_costs],
-        textposition='outside'
+        textposition='outside',
+        textfont=dict(size=11, color='black')
     ))
     
     # Direct cost savings (negative bars showing savings)
@@ -485,7 +487,8 @@ def create_cost_breakdown_by_phase_chart(cost_results, summary_df):
         name='Direct Savings',
         marker_color='green',
         text=[format_currency(-s) if s > 0 else '' for s in direct_savings],
-        textposition='outside'
+        textposition='outside',
+        textfont=dict(size=11, color='black')
     ))
     
     # Cost avoidance (additional benefits, shown as negative)
@@ -495,21 +498,27 @@ def create_cost_breakdown_by_phase_chart(cost_results, summary_df):
         name='Cost Avoidance',
         marker_color='darkgreen',
         text=[format_currency(-a) if a > 0 else '' for a in cost_avoidance],
-        textposition='outside'
+        textposition='outside',
+        textfont=dict(size=11, color='black')
     ))
     
     fig.update_layout(
-        title="Executive Cost Summary: Baseline vs Actual Costs with Benefits",
-        xaxis_title="Project Phase",
-        yaxis_title="Cost ($)",
+        title=dict(
+            text="Executive Cost Summary: Baseline vs Actual Costs with Benefits",
+            font=dict(size=18, color='black')
+        ),
+        xaxis_title=dict(text="Project Phase", font=dict(size=14, color='black')),
+        yaxis_title=dict(text="Cost ($)", font=dict(size=14, color='black')),
         barmode='group',
         height=600,
+        font=dict(size=12, color='black'),
         legend=dict(
             orientation="h",
             yanchor="bottom",
             y=1.02,
             xanchor="right",
-            x=1
+            x=1,
+            font=dict(size=12, color='black')
         ),
         annotations=[
             dict(
@@ -517,7 +526,110 @@ def create_cost_breakdown_by_phase_chart(cost_results, summary_df):
                 y=1.15, yref='paper',
                 text="Green bars show financial benefits (savings = immediate, avoidance = future)",
                 showarrow=False,
-                font=dict(size=12, color='gray')
+                font=dict(size=14, color='gray')
+            )
+        ]
+    )
+    
+    # Add zero line for reference
+    fig.add_hline(y=0, line_dash="dash", line_color="black", opacity=0.5)
+    
+    return fig
+
+
+def create_hours_breakdown_by_phase_chart(summary_df, cost_results):
+    """Create detailed hours breakdown chart showing baseline vs modeled hours with savings"""
+    fig = make_subplots(
+        rows=1, cols=1,
+        subplot_titles=('Hours Breakdown by Phase',)
+    )
+    
+    phases = summary_df['Phase']
+    baseline_hours = summary_df['Baseline Hours'].tolist()
+    modeled_hours = summary_df['Modeled Hours'].tolist()
+    hours_saved = summary_df['Hour Variance'].tolist()  # Negative values = savings
+    
+    # Calculate hours avoided (equivalent to cost avoidance but in hours)
+    # This represents future operational time savings
+    hours_avoided = []
+    for phase in phases:
+        if phase == 'Post Go-Live':
+            # For Post Go-Live, calculate hours avoided based on cost avoidance
+            cost_avoidance = cost_results['avoidance'][phase]
+            blended_rate = cost_results['baseline_cost'][phase] / baseline_hours[phases.tolist().index(phase)] if baseline_hours[phases.tolist().index(phase)] > 0 else 100
+            hours_avoided.append(cost_avoidance / blended_rate if blended_rate > 0 else 0)
+        else:
+            hours_avoided.append(0)  # No hours avoided in development phases
+    
+    # Baseline hours (what we would work without initiatives)
+    fig.add_trace(go.Bar(
+        x=phases,
+        y=baseline_hours,
+        name='Baseline Hours',
+        marker_color='#8D33EF',
+        text=[format_hours(h) for h in baseline_hours],
+        textposition='outside',
+        textfont=dict(size=11, color='black')
+    ))
+    
+    # Modeled hours (what we actually work after initiatives)
+    fig.add_trace(go.Bar(
+        x=phases,
+        y=modeled_hours,
+        name='Actual Hours (After Initiatives)',
+        marker_color='#AA66F3',
+        text=[format_hours(h) for h in modeled_hours],
+        textposition='outside',
+        textfont=dict(size=11, color='black')
+    ))
+    
+    # Hours saved (negative bars showing time savings)
+    fig.add_trace(go.Bar(
+        x=phases,
+        y=hours_saved,  # hours_saved is already negative from Hour Variance
+        name='Hours Saved',
+        marker_color='green',
+        text=[format_hours(-h) if h < 0 else '' for h in hours_saved],
+        textposition='outside',
+        textfont=dict(size=11, color='black')
+    ))
+    
+    # Hours avoided (additional future time benefits, shown as negative)
+    fig.add_trace(go.Bar(
+        x=phases,
+        y=[-h for h in hours_avoided],  # Show avoidance as negative
+        name='Hours Avoided',
+        marker_color='darkgreen',
+        text=[format_hours(-h) if h > 0 else '' for h in hours_avoided],
+        textposition='outside',
+        textfont=dict(size=11, color='black')
+    ))
+    
+    fig.update_layout(
+        title=dict(
+            text="Executive Hours Summary: Baseline vs Actual Hours with Time Benefits",
+            font=dict(size=18, color='black')
+        ),
+        xaxis_title=dict(text="Project Phase", font=dict(size=14, color='black')),
+        yaxis_title=dict(text="Hours", font=dict(size=14, color='black')),
+        barmode='group',
+        height=600,
+        font=dict(size=12, color='black'),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1,
+            font=dict(size=12, color='black')
+        ),
+        annotations=[
+            dict(
+                x=0.5, xref='paper',
+                y=1.15, yref='paper',
+                text="Green bars show time benefits (saved = immediate, avoided = future)",
+                showarrow=False,
+                font=dict(size=14, color='gray')
             )
         ]
     )
@@ -1102,6 +1214,59 @@ def main():
         - **Direct Savings**: Immediate cost reductions during development
         - **Cost Avoidance**: Future operational savings from better quality/processes
         """)
+        
+        # New comprehensive hours breakdown chart
+        hours_breakdown_chart = create_hours_breakdown_by_phase_chart(summary_df, cost_results)
+        st.plotly_chart(hours_breakdown_chart, use_container_width=True)
+        
+        st.markdown("""
+        **Key for Executives (Hours):**
+        - **Baseline Hours**: Time we'd spend without any efficiency initiatives
+        - **Actual Hours**: Time we actually spend after implementing initiatives  
+        - **Hours Saved**: Direct time reductions from efficiency improvements
+        - **Hours Avoided**: Future operational time savings from better quality/processes
+        """)
+        
+        # Hours chart data table
+        st.subheader("Hours Chart Data Breakdown")
+        st.markdown("**Data used to create the Executive Hours Summary chart above:**")
+        
+        # Create the data table for hours chart using available data
+        hours_chart_data = []
+        for phase in summary_df['Phase']:
+            baseline_hours_val = summary_df[summary_df['Phase'] == phase]['Baseline Hours'].iloc[0]
+            modeled_hours_val = summary_df[summary_df['Phase'] == phase]['Modeled Hours'].iloc[0]
+            hours_saved_val = summary_df[summary_df['Phase'] == phase]['Hour Variance'].iloc[0]
+            
+            # Calculate hours avoided for this phase
+            if phase == 'Post Go-Live':
+                cost_avoidance = cost_results['avoidance'][phase]
+                blended_rate = cost_results['baseline_cost'][phase] / baseline_hours_val if baseline_hours_val > 0 else 100
+                hours_avoided_val = cost_avoidance / blended_rate if blended_rate > 0 else 0
+            else:
+                hours_avoided_val = 0
+            
+            hours_chart_data.append({
+                'Phase': phase,
+                'Baseline Hours': baseline_hours_val,
+                'Actual Hours (After Initiatives)': modeled_hours_val,
+                'Hours Saved': hours_saved_val,
+                'Hours Avoided': hours_avoided_val
+            })
+        
+        hours_chart_df = pd.DataFrame(hours_chart_data)
+        
+        # Display the table with formatting
+        st.dataframe(
+            hours_chart_df.style.format({
+                'Baseline Hours': '{:,.0f}',
+                'Actual Hours (After Initiatives)': '{:,.0f}',
+                'Hours Saved': '{:,.0f}',
+                'Hours Avoided': '{:,.0f}'
+            }),
+            use_container_width=True,
+            height=300
+        )
         
         col1, col2 = st.columns(2)
         
