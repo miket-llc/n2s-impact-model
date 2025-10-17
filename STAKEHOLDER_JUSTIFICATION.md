@@ -295,7 +295,7 @@ The N2S Impact Model calculates **potential** professional services efficiency g
 
 **A:**
 
-"When baseline maturity is CMMI Level 1-2 (most Banner clients), methodology improvements deliver the highest ROI. PMI research shows standardized delivery processes reduce waste by 20% and improve success rates by 35%. For clients where 'the PMO is in shambles' (direct feedback), fixing governance (EDCC at 80% methodology) and architecture discipline (CARM at 65% methodology) IS the value. Tools don't fix broken process—they amplify what you have."
+"When baseline maturity is CMMI Level 1-2 (most Banner clients), methodology improvements deliver the highest ROI. PMI research shows standardized delivery processes reduce waste by 20% and improve success rates by 35%. For organizations where 'the PMO is in shambles' (our own experience), fixing governance (EDCC at 80% methodology) and architecture discipline (CARM at 65% methodology) IS the value. Tools don't fix broken process—they amplify what you have."
 
 ### Q: "Can you prove the 25%?"
 
