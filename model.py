@@ -3,7 +3,7 @@ Core calculation engine for N2S Efficiency Modeling Application - REBUILT
 Industry-grounded mathematical foundation based on published research
 
 BASELINE DEFINITION:
-- Manual regression testing (70% manual, 30% automated unit tests)
+- Manual regression testing (100% manual - no automated testing frameworks)
 - Basic CI/CD (automated builds, manual deployments)
 - Custom integrations (minimal code reuse <10%)
 - Manual environment setup (some scripting)
@@ -11,7 +11,7 @@ BASELINE DEFINITION:
 - Bug detection primarily in testing phases (not shift-left)
 - Standard defect rates (2-5 defects per 1000 LOC)
 
-This represents a typical mid-maturity enterprise software delivery organization.
+This represents a typical Banner client starting point (CMMI Level 1-2).
 """
 
 import pandas as pd
@@ -47,12 +47,14 @@ def get_calibrated_matrix():
 
     See OPERATIONAL_EFFICIENCY_CAVEAT.md for full explanation and defense strategy.
 
-    Research basis (75th percentile of published studies):
+    Research basis (upper quartile of published studies):
     - Test automation: Perfecto/Testlio upper range (40-50% phase reduction)
-    - AI/Automation: GitHub Copilot + productivity studies (20-30% build impact)
+    - AI/Automation: GitHub Copilot + productivity studies (20-30% impact)
     - DevOps/Agile: DORA/Accelerate research (15-25% delivery improvement)
     - IaC: Puppet State of DevOps (deployment 80% faster)
     - Reuse: Gartner component reuse studies (30-40% development reduction)
+    
+    Note: All initiatives show biggest impact in Test phase because baseline is 100% manual testing.
 
     Matrix values: 0.88x multiplier applied to achieve 25% with realistic maturity mix
     """

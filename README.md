@@ -26,6 +26,8 @@
 ### Calibration Methodology
 The model uses **upper quartile** of published industry research ranges, representing ambitious but achievable outcomes for high-performing organizations. This approach is conservative compared to outlier case studies but optimistic compared to average implementations.
 
+**Important Context:** The model is calibrated for organizations starting with **100% manual testing**. This means all automation initiatives show their biggest impact in the Test phase, which accurately reflects the reality that testing automation provides the highest ROI when starting from a fully manual testing environment.
+
 | Initiative | Research Source | Max Benefit | Model Calibration |
 |------------|----------------|-------------|-------------------|
 | **Test Automation** | Perfecto Mobile (2023), Tricentis (2024) | 30-50% test phase reduction | 50% (upper range) |
@@ -196,15 +198,15 @@ streamlit run app.py
 ### Key Model Assumptions
 
 #### Baseline Definition
-**Typical mid-maturity enterprise software delivery organization:**
-- Manual regression testing: 70% manual, 30% automated unit tests
+**Typical Banner client starting point (CMMI Level 1-2):**
+- **Manual testing: 100% manual** (no automated testing frameworks)
 - Basic CI/CD: Automated builds, manual deployments
 - Custom integrations: Minimal code reuse (<10%)
 - Manual environment setup: 2-4 days per environment
 - Traditional PM: Waterfall-adjacent project management
 - Bug detection: Primarily in testing phases (not shift-left)
 - Standard defect rates: 2-5 defects per 1000 LOC
-- **CMMI Level 2-3 maturity baseline**
+- **Note: This low baseline means testing automation has outsized impact**
 
 #### Financial Assumptions
 - **Labor Rate:** $100/hour blended rate (configurable)
