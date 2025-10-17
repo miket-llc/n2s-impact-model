@@ -15,11 +15,13 @@ This application models the efficiency improvements and cost benefits of impleme
 
 **Model Calibration:** The model uses a calibrated efficiency matrix grounded in **75th percentile** of published industry research (Gartner, McKinsey, Forrester, DORA, etc.). This represents **ambitious but achievable** outcomes for high-performing organizations.
 
-**Calibration Targets:**
-- **CMMI Level 2 defaults** (20-40% maturity) → **~10% total project savings**
-- **50% maturity** across all initiatives → **~13-15% total project savings**
-- **90-95% maturity** across key initiatives → **~25% total project savings**
-- **100% maturity** across all initiatives → **~26-28% total project savings**
+**Calibration Validated (October 17, 2025):**
+- **App defaults** (25% avg maturity) → **6.2% total project savings**
+- **50% maturity** across all initiatives → **12.5% total project savings**
+- **90-95% maturity** across key initiatives → **~23-24% total project savings**
+- **100% maturity** across all initiatives → **25.0% total project savings**
+
+**Important:** The 25% maximum includes ~17-20% research-backed improvements plus ~3-8% operational efficiency gains (resource utilization, reduced rework, process optimization). See `OPERATIONAL_EFFICIENCY_CAVEAT.md` for details.
 
 **Research basis:** Each matrix value is derived from specific studies:
 - Test automation: Perfecto/Testlio (30-50% test phase reduction)
@@ -202,24 +204,26 @@ Different roles benefit differently from initiatives:
 #### **Strategic Savings Breakdown**
 Categorizes all savings into three executive value buckets:
 
-**🟢 OOtB Config (30-35% of savings):**
-- Preconfigured environments and templates
-- Reusable components and accelerators
+**🔵 N2S Methodology & Controls (~43% of savings):**
+- CARM (Cloud Architecture Reference Model) - 65% methodology
+- EDCC (Ellucian Delivery Control Center) - 80% methodology
+- Agile + DevOps Practices - 70% methodology
+- Governance, quality controls, and delivery discipline
+- **Rationale:** When baseline maturity is low (CMMI 1-2), process improvements deliver the most value
+
+**🟢 OOtB Config (~32% of savings):**
+- Preconfigured environments and templates - 65% OOtB
+- Reusable integration components - 60% OOtB
+- Modernization Studio accelerators - 50% OOtB
 - Reference architectures and patterns
-- Test suites and integration patterns
+- **Rationale:** Templates and reusable assets provide significant leverage once process discipline exists
 
-**🔵 N2S Methodology & Controls (20-25% of savings):**
-- CARM (Cloud Architecture Reference Model)
-- EDCC (Ellucian Delivery Control Center)
-- Agile practices and process improvements
-- Governance and quality controls
-
-**🟠 AI & Automation (45-50% of savings):**
-- Test automation frameworks and tools
-- AI-powered development assistance
+**🟠 AI & Automation (~26% of savings):**
+- Automated Testing frameworks - 55% AI/automation
+- AI-powered development assistance - 70% AI/automation
 - CI/CD pipeline automation
 - Automated provisioning and deployment
-- AI-enhanced search and recommendations
+- **Rationale:** Tools amplify good process; the 43% methodology foundation enables the 26% AI value
 
 **Category Analysis Includes:**
 - Category totals with percentage of overall savings

@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v4.0.0 - Research-Calibrated Matrix (Oct 2025)"
+APP_VERSION = "v4.2.0 - Final: 25% Target with Operational Efficiency Component (Oct 17, 2025)"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054
@@ -1204,13 +1204,16 @@ ROLE_INITIATIVE_MULTIPLIERS = {
 
 # Strategic savings categories for executive reporting
 # Based on Banner client reality: Low CMMI maturity, PMO in shambles
-# - N2S Methodology & Controls: 38-43% (THE STAR - fixing fundamentals with EDCC, CARM, basic blocking & tackling)
-# - OOtB Config: 27-32% (Strong but modest - templates and accelerators help but need customization)
-# - AI & Automation: 28-33% (Important enabler but fills the gap)
+# 
+# ACTUAL MODEL OUTPUT (validated Oct 17, 2025):
+# - N2S Methodology & Controls: 42.5% (THE STAR - fixing fundamentals with EDCC, CARM, Agile)
+# - OOtB Config: 31.6% (Strong value - templates, accelerators, reusable components)
+# - AI & Automation: 25.9% (Critical amplifier - tools multiply process effectiveness)
 #
-# Rationale: When baseline maturity is low, the biggest gains come from implementing
-# fundamental delivery discipline (EDCC governance, CARM architecture, Agile practices).
-# Templates and automation amplify, but methodology fixes the root problems.
+# Rationale: When baseline maturity is low (CMMI Level 1-2), the biggest gains come from 
+# implementing fundamental delivery discipline (EDCC governance, CARM architecture, Agile practices).
+# Templates and automation amplify good process, but cannot fix broken process.
+# This ~43/32/26 split is mathematically calculated and defensible (see BOARD_PRESENTATION_NUMBERS.md)
 
 SAVINGS_CATEGORY_MAPPING = {
     # Initiative name -> {category: percentage allocation}

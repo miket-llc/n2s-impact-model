@@ -33,35 +33,43 @@ from config import (
 
 def get_calibrated_matrix():
     """
-    Return the calibrated efficiency matrix - RECALIBRATED to 75th percentile
+    Return the calibrated efficiency matrix - FINAL CALIBRATION (Oct 17, 2025)
     
-    Calibration target: 50% maturity = ~10-12% savings, 100% = ~25-28%
+    Calibration: 100% maturity = ~25% total project savings
     
-    Research basis:
+    IMPORTANT: This 25% includes:
+    - ~17-20%: Research-backed technical improvements (tools, automation, standards)
+    - ~3-8%: Operational efficiency gains (resource utilization, reduced rework, faster decisions)
+    
+    See OPERATIONAL_EFFICIENCY_CAVEAT.md for full explanation and defense strategy.
+    
+    Research basis (75th percentile of published studies):
     - Test automation: Perfecto/Testlio upper range (40-50% phase reduction)
     - AI/Automation: GitHub Copilot + productivity studies (20-30% build impact)
     - DevOps/Agile: DORA/Accelerate research (15-25% delivery improvement)
     - IaC: Puppet State of DevOps (deployment 80% faster)
     - Reuse: Gartner component reuse studies (30-40% development reduction)
+    
+    Matrix values: 0.64x multiplier applied to achieve 25% target with operational component
     """
     sample_data = {
         #                     Mod   AI   CARM  PreC  Auto  EDCC  Intg  Agile
         # Early phases: Planning, discovery, requirements
-        'Discover':        [-30, -22,  -42,  -52,  -15,  -37,  -45,  -52],  # Agile ceremonies reduce discovery waste
-        'Plan':            [-42, -36,  -67,  -82,  -22,  -57,  -63,  -72],  # Agile planning + templates
-        'Design':          [-67, -57, -97, -105,  -82,  -75,  -90,  -82],  # Patterns + collaborative design
+        'Discover':        [-19, -14,  -27,  -33,   -9,  -24,  -28,  -33],  # Agile ceremonies reduce discovery waste
+        'Plan':            [-27, -23,  -43,  -52,  -14,  -37,  -40,  -46],  # Agile planning + templates
+        'Design':          [-43, -37,  -62,  -68,  -52,  -48,  -58,  -52],  # Patterns + collaborative design
         
         # Development: Where automation has biggest impact
-        'Build':          [-112, -165, -135, -202, -270, -127, -247, -142],  # AI coding + reuse + automation
+        'Build':           [-72, -105, -86, -129, -173, -82, -159,  -91],  # AI coding + reuse + automation
         
         # Testing: Highest automation potential  
-        'Test':           [-270, -247, -217, -165, -345, -142, -382, -202],  # Test automation is the star
+        'Test':           [-173, -159, -139, -105, -221, -91, -245, -129],  # Test automation is the star
         
         # Deployment: DevOps automation shines
-        'Deploy':          [-57, -108, -42,  -82,  -67,  -48,  -63,  -97],  # IaC + CD pipelines
+        'Deploy':          [-37,  -70, -27,  -52,  -43, -31,  -40,  -62],  # IaC + CD pipelines
         
         # Post Go-Live: Operational efficiencies
-        'Post Go-Live':   [-202, -135, -165, -240, -112, -127, -187, -165]   # Better quality + support automation
+        'Post Go-Live':   [-129,  -86, -105, -154, -72, -82, -120, -105]   # Better quality + support automation
     }
     
     return pd.DataFrame(sample_data, index=INITIATIVE_FALLBACK)

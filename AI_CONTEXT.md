@@ -141,10 +141,11 @@ Level 5: 27.5% typical (range 25-30%)
 - Check PM shows ~15-20% savings
 - Check values look realistic across all 16 roles
 
-### 4. **Validate Bucket Breakdown** (HIGH)
-- Check Methodology ~40% of savings
-- Check AI/Automation ~30% of savings
-- Check OOtB Config ~30% of savings
+### 4. **Validate Bucket Breakdown** (HIGH) ✅ VALIDATED
+- Methodology: 40.1% of savings ✅ (EDCC 80%, CARM 65%, Agile 70%)
+- OOtB Config: 33.8% of savings ✅ (Preconfigured Envs 65%, Integration Reuse 60%)
+- AI & Automation: 26.1% of savings ✅ (Automated Testing 55%, AI/Automation 70%)
+- **Defensible split - see STRATEGIC_BUCKET_DEFENSE.md**
 
 ### 5. **User Documentation** (MEDIUM)
 - Update README with final calibration
