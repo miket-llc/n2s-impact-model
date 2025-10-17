@@ -59,21 +59,21 @@ def get_calibrated_matrix():
     sample_data = {
         #                     Mod   AI   CARM  PreC  Auto  EDCC  Intg  Agile
         # Early phases: Planning, discovery, requirements
-        'Discover':        [-26, -19,  -37,  -45,  -12,  -33,  -38,  -45],  # Agile ceremonies reduce discovery waste
-        'Plan':            [-37, -32,  -59,  -71,  -19,  -51,  -55,  -63],  # Agile planning + templates
-        'Design':          [-59, -51,  -85,  -93,  -71,  -66,  -79,  -71],  # Patterns + collaborative design
+        'Discover':        [-23, -16,  -32,  -39,  -10,  -29,  -33,  -39],  # Agile ceremonies reduce discovery waste
+        'Plan':            [-32, -28,  -51,  -62,  -16,  -44,  -48,  -55],  # Agile planning + templates
+        'Design':          [-51, -44,  -74,  -81,  -62,  -57,  -69,  -62],  # Patterns + collaborative design
         
         # Development: Where automation has biggest impact
-        'Build':           [-99, -144, -118, -177, -237, -112, -218, -125],  # AI coding + reuse + automation
+        'Build':           [-86, -125, -102, -154, -206, -97, -189, -109],  # AI coding + reuse + automation
         
         # Testing: Highest automation potential  
-        'Test':           [-237, -218, -190, -144, -303, -125, -336, -177],  # Test automation is the star
+        'Test':           [-206, -189, -165, -125, -263, -109, -292, -154],  # Test automation is the star
         
         # Deployment: DevOps automation shines
-        'Deploy':          [-51,  -96, -37,  -71,  -59, -42,  -55,  -85],  # IaC + CD pipelines
+        'Deploy':          [-44,  -83, -32,  -62,  -51, -36,  -48,  -74],  # IaC + CD pipelines
         
         # Post Go-Live: Operational efficiencies
-        'Post Go-Live':   [-177, -118, -144, -211, -99, -112, -164, -144]   # Better quality + support automation
+        'Post Go-Live':   [-154, -102, -125, -183, -86, -97, -142, -125]   # Better quality + support automation
     }
     
     return pd.DataFrame(sample_data, index=INITIATIVE_FALLBACK)
