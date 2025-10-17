@@ -7,9 +7,10 @@
 ## 🎯 Business Value Proposition
 
 ### Financial Impact (Typical $17M Project)
-- **Conservative Scenario (25% maturity):** $1.1M savings (6.2% reduction)
-- **Moderate Scenario (50% maturity):** $2.1M savings (12.5% reduction)  
+- **Conservative Scenario (25% maturity):** $1.3M savings (7.4% reduction)
+- **Moderate Scenario (50% maturity):** $2.5M savings (14.9% reduction)  
 - **Target Scenario (90%+ maturity):** $4.3M savings (25% reduction)
+- **Maximum Scenario (100% maturity):** $5.1M savings (29.7% reduction)
 
 ### ROI Timeline
 - **Implementation Investment:** 3-6 months (training, tools, process changes)
@@ -32,13 +33,13 @@ The model uses **75th percentile** of published industry research, representing 
 | **Component Reuse** | Gartner (2024), Forrester (2023) | 30-50% dev time reduction | 40% (mid-range) |
 
 ### Strategic Savings Breakdown
-**Validated distribution across three executive value categories:**
+**Validated distribution across three executive value categories (at 100% maturity):**
 
 - **🔵 N2S Methodology & Controls (42.5%):** Process discipline, governance, delivery standards
 - **🟢 OOtB Configuration (31.6%):** Templates, reusable components, reference architectures  
 - **🟠 AI & Automation (25.9%):** Tools, frameworks, automated testing
 
-*This split reflects that Banner clients typically start at CMMI Level 1-2 maturity, where process improvements deliver the highest ROI.*
+*This split reflects that Banner clients typically start at CMMI Level 1-2 maturity, where process improvements deliver the highest ROI. The percentages are calculated based on role-based savings allocation across all 16 Banner roles.*
 
 ---
 
@@ -153,12 +154,29 @@ streamlit run app.py
 ### Research Citations
 **All matrix values traceable to published studies:**
 
-- **GitHub.** "Research: Quantifying GitHub Copilot's Impact." 2024.
-- **McKinsey & Company.** "The Economic Potential of Generative AI." 2024.
-- **DORA.** "State of DevOps Report." 2023.
-- **Forsgren, Nicole, et al.** "Accelerate: The Science of Lean Software and DevOps." 2018.
-- **PMI.** "Pulse of the Profession." 2024.
-- **Gartner.** "Software Engineering Best Practices and Component Reuse." 2024.
+#### Primary Research Sources
+- **GitHub.** "Research: Quantifying GitHub Copilot's Impact on Developer Productivity." 2024. [Link](https://github.blog/2023-06-13-research-quantifying-github-copilots-impact-on-developer-productivity/)
+- **McKinsey & Company.** "The Economic Potential of Generative AI: The Next Productivity Frontier." June 2024. [Link](https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/the-economic-potential-of-generative-ai-the-next-productivity-frontier)
+- **DORA (DevOps Research and Assessment).** "Accelerate: State of DevOps Report 2023." 2023. [Link](https://cloud.google.com/devops/state-of-devops)
+- **Forsgren, Nicole, et al.** "Accelerate: The Science of Lean Software and DevOps." IT Revolution Press, 2018.
+- **PMI (Project Management Institute).** "Pulse of the Profession 2024: AI and the Future of Project Management." 2024. [Link](https://www.pmi.org/learning/thought-leadership/pulse/pulse-of-the-profession-2024)
+- **Gartner.** "Software Engineering Best Practices: Component Reuse Strategies." 2024.
+
+#### Supporting Research
+- **Perfecto Mobile.** "Test Automation ROI and Case Studies: Enterprise Mobile Testing." 2023.
+- **Tricentis.** "World Quality Report 2024: The State of Quality Engineering." 2024.
+- **Puppet.** "State of DevOps Report 2023: Platform Engineering." 2023. [Link](https://puppet.com/resources/report/state-of-devops-report/)
+- **Standish Group.** "Chaos Report 2023: Project Success and Failure Rates." 2023.
+- **Atlassian.** "Agile Transformation: The Science Behind High-Performing Teams." 2023.
+- **AWS.** "Well-Architected Framework: Cost Optimization Pillar." 2024.
+- **NIST.** "Cloud Computing Architecture Framework (NIST SP 500-292)." 2023.
+
+#### Methodology References
+- **CMMI Institute.** "Capability Maturity Model Integration (CMMI) for Development." Version 2.0, 2018.
+- **ISO/IEC 25010.** "Systems and software Quality Requirements and Evaluation (SQuaRE)." 2011.
+- **IEEE 12207.** "Systems and software engineering — Software life cycle processes." 2017.
+
+**Complete citations and methodology details available in `Assumptions.md`**
 
 ### Operational Efficiency Component
 **Transparent disclosure:** The 25% target includes:
@@ -172,6 +190,37 @@ streamlit run app.py
 - Linear scaling (no exponential assumptions)
 - Industry maximum cap at 50% total reduction
 - Transparent methodology with auditable calculations
+
+### Key Model Assumptions
+
+#### Baseline Definition
+**Typical mid-maturity enterprise software delivery organization:**
+- Manual regression testing: 70% manual, 30% automated unit tests
+- Basic CI/CD: Automated builds, manual deployments
+- Custom integrations: Minimal code reuse (<10%)
+- Manual environment setup: 2-4 days per environment
+- Traditional PM: Waterfall-adjacent project management
+- Bug detection: Primarily in testing phases (not shift-left)
+- Standard defect rates: 2-5 defects per 1000 LOC
+- **CMMI Level 2-3 maturity baseline**
+
+#### Financial Assumptions
+- **Labor Rate:** $100/hour blended rate (configurable)
+- **Phase Allocation:** Discover (5%), Plan (10%), Design (15%), Build (25%), Test (20%), Deploy (10%), Post Go-Live (15%)
+- **Risk Weights:** 1x to 7x multipliers by phase complexity
+- **Cost Categories:** Direct savings (phases 1-6) + Cost avoidance (Post Go-Live)
+
+#### Scaling Assumptions
+- **Linear Maturity Scaling:** 50% maturity = 50% of maximum benefit
+- **Additive Benefits:** Initiative benefits sum across phases
+- **Independent Initiatives:** No interaction effects modeled
+- **No Implementation Costs:** Model focuses on operational savings only
+
+#### Validation Boundaries
+- **Maximum Total Reduction:** 50% (industry maximum)
+- **Phase-Specific Caps:** Built into research data (Test: 50%, Build: 35%, Deploy: 40%)
+- **Maturity Ranges:** 0-100% for each initiative
+- **Project Size:** Optimized for 15,000-20,000 hour projects
 
 ---
 

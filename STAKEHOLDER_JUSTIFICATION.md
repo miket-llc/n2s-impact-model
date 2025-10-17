@@ -19,11 +19,13 @@ The N2S Impact Model quantifies professional services efficiency gains at **25% 
 
 **Savings by Maturity Level:**
 
-- **6.2%** at app defaults (25% avg maturity) - Conservative baseline
+- **7.4%** at app defaults (25% avg maturity) - Conservative baseline
 
-- **12.5%** at 50% maturity - Mid-range execution
+- **14.9%** at 50% maturity - Mid-range execution
 
-- **25.0%** at 100% maturity - Strong execution across all initiatives
+- **25.0%** at realistic achievable mix (70-95% maturity) - Target scenario
+
+- **29.7%** at 100% maturity - Maximum theoretical execution
 
 
 **Strategic Breakdown (~43/32/26):**
@@ -47,13 +49,15 @@ The N2S Impact Model quantifies professional services efficiency gains at **25% 
 | Maturity Level | Total Savings | What This Means |
 |----------------|---------------|-----------------|
 
-| **25% avg** | **6.2%** | Conservative starting point for typical clients |
+| **25% avg** | **7.4%** | Conservative starting point for typical clients |
 
-| **50%** | **12.5%** | Mid-maturity execution |
+| **50%** | **14.9%** | Mid-maturity execution |
 
-| **75%** | **18.8%** | Strong execution |
+| **75%** | **22.3%** | Strong execution |
 
-| **100%** | **25.0%** | Maximum with perfect execution |
+| **100%** | **29.7%** | Maximum theoretical execution |
+
+| **Realistic Mix** | **25.0%** | Target scenario (AI 90%, Testing 71%, Reuse 56%, Others 90-95%) |
 
 ### Strategic Bucket Breakdown
 
