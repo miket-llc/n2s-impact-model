@@ -34,48 +34,55 @@ from config import (
 def get_calibrated_matrix():
     """
     Return the calibrated efficiency matrix - FINAL CALIBRATION (Oct 17, 2025)
-    
+
     Calibration: Realistic mix of 70-90% maturity = ~25% total project savings
-    
+
     Realistic achievable scenario:
     - AI/Automation: 90%, Testing: 71%, Reuse: 56%, Others: 90-95%
     - This mix achieves 25% with calibrated matrix
-    
+
     IMPORTANT: This 25% includes:
     - ~17-20%: Research-backed technical improvements (tools, automation, standards)
     - ~3-8%: Operational efficiency gains (resource utilization, reduced rework, faster decisions)
-    
+
     See OPERATIONAL_EFFICIENCY_CAVEAT.md for full explanation and defense strategy.
-    
+
     Research basis (75th percentile of published studies):
     - Test automation: Perfecto/Testlio upper range (40-50% phase reduction)
     - AI/Automation: GitHub Copilot + productivity studies (20-30% build impact)
     - DevOps/Agile: DORA/Accelerate research (15-25% delivery improvement)
     - IaC: Puppet State of DevOps (deployment 80% faster)
     - Reuse: Gartner component reuse studies (30-40% development reduction)
-    
+
     Matrix values: 0.88x multiplier applied to achieve 25% with realistic maturity mix
     """
     sample_data = {
         #                     Mod   AI   CARM  PreC  Auto  EDCC  Intg  Agile
         # Early phases: Planning, discovery, requirements
-        'Discover':        [-23, -16,  -32,  -39,  -10,  -29,  -33,  -39],  # Agile ceremonies reduce discovery waste
-        'Plan':            [-32, -28,  -51,  -62,  -16,  -44,  -48,  -55],  # Agile planning + templates
-        'Design':          [-51, -44,  -74,  -81,  -62,  -57,  -69,  -62],  # Patterns + collaborative design
-        
+        # Agile ceremonies reduce discovery waste
+        'Discover': [-23, -16, -32, -39, -10, -29, -33, -39],
+        # Agile planning + templates
+        'Plan': [-32, -28, -51, -62, -16, -44, -48, -55],
+        # Patterns + collaborative design
+        'Design': [-51, -44, -74, -81, -62, -57, -69, -62],
+
         # Development: Where automation has biggest impact
-        'Build':           [-86, -125, -102, -154, -206, -97, -189, -109],  # AI coding + reuse + automation
-        
-        # Testing: Highest automation potential  
-        'Test':           [-206, -189, -165, -125, -263, -109, -292, -154],  # Test automation is the star
-        
+        # AI coding + reuse + automation
+        'Build': [-86, -125, -102, -154, -206, -97, -189, -109],
+
+        # Testing: Highest automation potential
+        # Test automation is the star
+        'Test': [-206, -189, -165, -125, -263, -109, -292, -154],
+
         # Deployment: DevOps automation shines
-        'Deploy':          [-44,  -83, -32,  -62,  -51, -36,  -48,  -74],  # IaC + CD pipelines
-        
+        # IaC + CD pipelines
+        'Deploy': [-44, -83, -32, -62, -51, -36, -48, -74],
+
         # Post Go-Live: Operational efficiencies
-        'Post Go-Live':   [-154, -102, -125, -183, -86, -97, -142, -125]   # Better quality + support automation
+        # Better quality + support automation
+        'Post Go-Live': [-154, -102, -125, -183, -86, -97, -142, -125]
     }
-    
+
     return pd.DataFrame(sample_data, index=INITIATIVE_FALLBACK)
 
 
@@ -111,7 +118,7 @@ INITIATIVE_RESEARCH = {
             "Design": {"max_reduction_pct": 0.01, "rationale": "Testability considerations in design"},
         }
     },
-    
+
     "AI/Automation": {
         "description": "AI-powered code generation, automated workflows, intelligent tooling",
         "research_source": "GitHub Copilot studies (30% faster coding), McKinsey GenAI research",
@@ -136,7 +143,7 @@ INITIATIVE_RESEARCH = {
             "Plan": {"max_reduction_pct": 0.01, "rationale": "AI-assisted estimation"},
         }
     },
-    
+
     "N2S CARM": {
         "description": "Cloud Architecture Reference Model - standardized architecture patterns",
         "research_source": "NIST Cloud Architecture Framework, AWS Well-Architected Framework",
@@ -158,7 +165,7 @@ INITIATIVE_RESEARCH = {
             "Test": {"max_reduction_pct": 0.02, "rationale": "Known patterns simplify testing strategy"},
         }
     },
-    
+
     "Preconfigured Envs": {
         "description": "Pre-built development, testing, and deployment environments (IaC)",
         "research_source": "Puppet State of DevOps Report, DORA metrics research",
@@ -170,7 +177,7 @@ INITIATIVE_RESEARCH = {
                 "rationale": "Reduces environment planning, but still need other planning activities"
             },
             "Deploy": {
-                "max_reduction_pct": 0.06,  # 6% deployment phase reduction  
+                "max_reduction_pct": 0.06,  # 6% deployment phase reduction
                 "rationale": "Faster environment setup, but still need deployment validation, cutover"
             },
             "Test": {
@@ -183,7 +190,7 @@ INITIATIVE_RESEARCH = {
             "Post Go-Live": {"max_reduction_pct": 0.02, "rationale": "Fewer environment-related production issues"},
         }
     },
-    
+
     "EDCC": {
         "description": "Ellucian Delivery Control Center - governance, standards, quality gates",
         "research_source": "PMI Project Success Rates, Standish Group Chaos Report",
@@ -209,7 +216,7 @@ INITIATIVE_RESEARCH = {
             "Deploy": {"max_reduction_pct": 0.02, "rationale": "Deployment checklist validation"},
         }
     },
-    
+
     "Integration Code Reuse": {
         "description": "Standardized integration patterns, reusable components and APIs",
         "research_source": "Gartner API Management research, Forrester Integration Platform studies",
@@ -234,7 +241,7 @@ INITIATIVE_RESEARCH = {
             "Post Go-Live": {"max_reduction_pct": 0.05, "rationale": "Proven components have fewer issues"},
         }
     },
-    
+
     "Modernization Studio": {
         "description": "Ellucian's modern development platform, templates, and accelerators",
         "research_source": "Low-code platform productivity studies (Forrester, Gartner)",
@@ -259,7 +266,7 @@ INITIATIVE_RESEARCH = {
             "Post Go-Live": {"max_reduction_pct": 0.04, "rationale": "Platform handles some common issues"},
         }
     },
-    
+
     "Agile + DevOps Practices": {
         "description": "Agile ceremonies, DevOps culture, continuous delivery, collaborative practices",
         "research_source": "DORA State of DevOps, Accelerate (Forsgren), McKinsey Agile studies",
@@ -303,7 +310,7 @@ def get_initiatives() -> List[str]:
 class N2SEfficiencyModel:
     """
     Core model for calculating N2S efficiency improvements
-    
+
     MATHEMATICAL FOUNDATION:
     1. Uses CALIBRATED MATRIX (validated at 50% maturity = 8.7% savings)
     2. Maturity level (0-100%) scales linearly: effective_delta = matrix_value * (maturity/100)
@@ -311,13 +318,13 @@ class N2SEfficiencyModel:
     4. Applies realistic caps to prevent unrealistic stacking
     5. Total project savings % = (baseline_hours - modeled_hours) / baseline_hours
     """
-    
+
     def __init__(self):
         """Initialize the model with calibrated matrix"""
         self.matrix_data = get_calibrated_matrix()
         self.initiatives = list(self.matrix_data.index)
         self.loaded = True
-        
+
     def apply_maturity_to_matrix(
         self,
         maturity_levels: Dict[str, float],
@@ -325,11 +332,11 @@ class N2SEfficiencyModel:
     ) -> pd.DataFrame:
         """
         Apply maturity levels to calibrated matrix
-        
+
         Args:
             maturity_levels: Dict mapping initiative names to maturity % (0-100)
             total_hours: Total project hours for scaling
-            
+
         Returns:
             DataFrame with effective hour deltas (negative = savings)
         """
@@ -337,11 +344,11 @@ class N2SEfficiencyModel:
         # Matrix is calibrated for 17,054 hours
         CALIBRATED_HOURS = 17054.0
         size_scale_factor = total_hours / CALIBRATED_HOURS
-        
+
         # Apply maturity levels to matrix
         effective_matrix = self.matrix_data.copy().astype(float)
         effective_matrix = effective_matrix * size_scale_factor
-        
+
         # Apply maturity multipliers (0-100% scales linearly)
         for initiative in effective_matrix.index:
             if initiative in maturity_levels:
@@ -349,9 +356,9 @@ class N2SEfficiencyModel:
                 effective_matrix.loc[initiative] = (
                     effective_matrix.loc[initiative] * maturity_multiplier
                 )
-        
+
         return effective_matrix
-    
+
     def apply_maturity_levels(
         self,
         maturity_levels: Dict[str, float],
@@ -360,31 +367,34 @@ class N2SEfficiencyModel:
     ) -> Tuple[Dict[str, float], Dict[str, float], pd.DataFrame]:
         """
         Calculate modeled hours using CALIBRATED MATRIX approach
-        
+
         Args:
             maturity_levels: Dict mapping initiative names to maturity % (0-100)
             total_hours: Total project hours
             phase_allocation: Phase allocation percentages
-            
+
         Returns:
             Tuple of (baseline_hours, modeled_hours, savings_detail_df)
         """
         # Calculate baseline hours per phase
-        baseline_hours = calculate_baseline_hours(total_hours, phase_allocation)
-        
+        baseline_hours = calculate_baseline_hours(
+            total_hours, phase_allocation)
+
         # Apply maturity to matrix (scales and applies maturity)
-        effective_matrix = self.apply_maturity_to_matrix(maturity_levels, total_hours)
-        
+        effective_matrix = self.apply_maturity_to_matrix(
+            maturity_levels, total_hours)
+
         # Calculate modeled hours by applying matrix deltas
         modeled_hours = {}
         for phase in PHASE_ORDER:
             if phase in effective_matrix.columns:
                 # Sum all initiative deltas for this phase (negative = savings)
                 total_delta = effective_matrix[phase].sum()
-                modeled_hours[phase] = max(0, baseline_hours[phase] + total_delta)
+                modeled_hours[phase] = max(
+                    0, baseline_hours[phase] + total_delta)
             else:
                 modeled_hours[phase] = baseline_hours[phase]
-        
+
         # Create savings detail DataFrame for transparency
         savings_detail = []
         for initiative in effective_matrix.index:
@@ -401,27 +411,28 @@ class N2SEfficiencyModel:
                                 'Hours Saved': abs(delta),
                                 'Rationale': f'Matrix-based calculation (calibrated)'
                             })
-        
-        savings_df = pd.DataFrame(savings_detail) if savings_detail else pd.DataFrame()
-        
+
+        savings_df = pd.DataFrame(
+            savings_detail) if savings_detail else pd.DataFrame()
+
         return baseline_hours, modeled_hours, savings_df
-    
+
     def _get_rationale(self, initiative: str, phase: str) -> str:
         """Get rationale for initiative benefit in phase"""
         research = self.initiative_research.get(initiative, {})
-        
+
         # Check primary benefits first
         primary = research.get("primary_benefits", {})
         if phase in primary:
             return primary[phase].get("rationale", "")
-        
+
         # Check secondary benefits
         secondary = research.get("secondary_benefits", {})
         if phase in secondary:
             return secondary[phase].get("rationale", "")
-        
+
         return ""
-    
+
     def calculate_costs_and_savings(
         self,
         baseline_hours: Dict[str, float],
@@ -431,50 +442,54 @@ class N2SEfficiencyModel:
         cost_avoidance_config: Optional[Dict] = None
     ) -> Dict[str, Dict[str, float]]:
         """Calculate comprehensive cost analysis"""
-        
+
         baseline_cost = {}
         modeled_cost = {}
         savings = {}
         avoidance = {}
-        
+
         for phase in PHASE_ORDER:
             baseline_cost[phase] = baseline_hours[phase] * blended_rate
             modeled_cost[phase] = modeled_hours[phase] * blended_rate
             savings[phase] = baseline_cost[phase] - modeled_cost[phase]
-            
+
             # Cost avoidance calculation
             if include_cost_avoidance and cost_avoidance_config:
                 if phase == 'Post Go-Live':
                     # Cost avoidance applies primarily to ongoing operations
                     multiplier = cost_avoidance_config.get('multiplier', 1.0)
-                    ongoing_factor = cost_avoidance_config.get('ongoing_factor', 1.0)
-                    
-                    # Calculate total development savings as basis for avoidance
-                    dev_savings = sum(savings[p] for p in PHASE_ORDER if p != 'Post Go-Live')
+                    ongoing_factor = cost_avoidance_config.get(
+                        'ongoing_factor', 1.0)
+
+                    # Calculate total development savings as basis for
+                    # avoidance
+                    dev_savings = sum(
+                        savings[p] for p in PHASE_ORDER if p != 'Post Go-Live')
                     base_avoidance = max(0, dev_savings * ongoing_factor)
                     avoidance[phase] = base_avoidance * multiplier
                 else:
                     avoidance[phase] = 0.0
             else:
                 avoidance[phase] = 0.0
-        
+
         return {
             'baseline_cost': baseline_cost,
             'modeled_cost': modeled_cost,
             'savings': savings,
             'avoidance': avoidance
         }
-    
+
     def calculate_risk_adjusted_hours(
-        self, 
-        modeled_hours: Dict[str, float], 
+        self,
+        modeled_hours: Dict[str, float],
         risk_weights: Dict[str, float]
     ) -> Dict[str, float]:
         """Apply risk weights to modeled hours"""
         risk_adjusted = {}
         for phase in PHASE_ORDER:
             if phase in risk_weights:
-                risk_adjusted[phase] = modeled_hours[phase] * risk_weights[phase]
+                risk_adjusted[phase] = modeled_hours[phase] * \
+                    risk_weights[phase]
             else:
                 risk_adjusted[phase] = modeled_hours[phase]
         return risk_adjusted
@@ -488,15 +503,21 @@ class N2SEfficiencyModel:
         risk_adjusted_hours: Dict[str, float]
     ) -> pd.DataFrame:
         """Generate comprehensive summary table"""
-        
+
         summary_data = []
         for phase in PHASE_ORDER:
             hour_variance = modeled_hours[phase] - baseline_hours[phase]
-            hour_variance_pct = (hour_variance / baseline_hours[phase] * 100) if baseline_hours[phase] > 0 else 0
-            
+            hour_variance_pct = (
+                hour_variance /
+                baseline_hours[phase] *
+                100) if baseline_hours[phase] > 0 else 0
+
             cost_variance = modeled_cost[phase] - baseline_cost[phase]
-            cost_variance_pct = (cost_variance / baseline_cost[phase] * 100) if baseline_cost[phase] > 0 else 0
-            
+            cost_variance_pct = (
+                cost_variance /
+                baseline_cost[phase] *
+                100) if baseline_cost[phase] > 0 else 0
+
             summary_data.append({
                 'Phase': phase,
                 'Baseline Hours': baseline_hours[phase],
@@ -509,7 +530,7 @@ class N2SEfficiencyModel:
                 'Cost Variance %': cost_variance_pct,
                 'Risk-Adjusted Hours': risk_adjusted_hours[phase]
             })
-        
+
         return pd.DataFrame(summary_data)
 
     def get_kpi_summary(
@@ -519,18 +540,21 @@ class N2SEfficiencyModel:
         cost_results: Dict[str, Dict[str, float]]
     ) -> Dict[str, float]:
         """Calculate key performance indicators"""
-        
+
         total_baseline_hours = sum(baseline_hours.values())
         total_modeled_hours = sum(modeled_hours.values())
         total_hours_saved = total_baseline_hours - total_modeled_hours
-        total_hours_saved_pct = (total_hours_saved / total_baseline_hours * 100) if total_baseline_hours > 0 else 0
-        
+        total_hours_saved_pct = (
+            total_hours_saved /
+            total_baseline_hours *
+            100) if total_baseline_hours > 0 else 0
+
         total_baseline_cost = sum(cost_results['baseline_cost'].values())
         total_modeled_cost = sum(cost_results['modeled_cost'].values())
         total_cost_savings = sum(cost_results['savings'].values())
         total_cost_avoidance = sum(cost_results['avoidance'].values())
         total_financial_benefit = total_cost_savings + total_cost_avoidance
-        
+
         return {
             'total_baseline_hours': total_baseline_hours,
             'total_modeled_hours': total_modeled_hours,
@@ -553,41 +577,53 @@ class N2SEfficiencyModel:
         cost_avoidance_config: Optional[Dict] = None
     ) -> pd.DataFrame:
         """Generate detailed initiative impact analysis from matrix"""
-        
+
         impact_data = []
-        
+
         # Get the effective matrix with maturity applied
         total_hours = sum(baseline_hours.values())
-        effective_matrix = self.apply_maturity_to_matrix(maturity_levels, total_hours)
-        
+        effective_matrix = self.apply_maturity_to_matrix(
+            maturity_levels, total_hours)
+
         for initiative, maturity_pct in maturity_levels.items():
             if maturity_pct > 0 and initiative in effective_matrix.index:
                 # Get this initiative's deltas from matrix (negative = savings)
                 initiative_row = effective_matrix.loc[initiative]
-                
+
                 # Calculate hour impacts for development vs post go-live
-                dev_phases = ['Discover', 'Plan', 'Design', 'Build', 'Test', 'Deploy']
-                dev_hours_saved = abs(sum(initiative_row[phase] for phase in dev_phases if phase in initiative_row))
-                post_golive_hours_saved = abs(initiative_row.get('Post Go-Live', 0))
-                
+                dev_phases = [
+                    'Discover',
+                    'Plan',
+                    'Design',
+                    'Build',
+                    'Test',
+                    'Deploy']
+                dev_hours_saved = abs(
+                    sum(initiative_row[phase] for phase in dev_phases if phase in initiative_row))
+                post_golive_hours_saved = abs(
+                    initiative_row.get('Post Go-Live', 0))
+
                 # Calculate financial impacts
                 dev_cost_impact = -dev_hours_saved * blended_rate  # Negative = savings
                 post_golive_cost_impact = -post_golive_hours_saved * blended_rate
-                
+
                 # Add cost avoidance if applicable
                 if include_cost_avoidance and cost_avoidance_config and dev_hours_saved > 0:
                     multiplier = cost_avoidance_config.get('multiplier', 1.0)
-                    ongoing_factor = cost_avoidance_config.get('ongoing_factor', 1.0)
-                    avoidance_value = (dev_hours_saved * blended_rate) * ongoing_factor * multiplier
+                    ongoing_factor = cost_avoidance_config.get(
+                        'ongoing_factor', 1.0)
+                    avoidance_value = (
+                        dev_hours_saved * blended_rate) * ongoing_factor * multiplier
                     post_golive_cost_impact -= avoidance_value
-                
+
                 total_financial_impact = dev_cost_impact + post_golive_cost_impact
-                
+
                 # Get research source if available
                 research_source = "Calibrated matrix (empirically validated)"
                 if initiative in INITIATIVE_RESEARCH:
-                    research_source = INITIATIVE_RESEARCH[initiative].get('research_source', research_source)
-                
+                    research_source = INITIATIVE_RESEARCH[initiative].get(
+                        'research_source', research_source)
+
                 impact_data.append({
                     'Initiative': initiative,
                     'Maturity %': maturity_pct,
@@ -599,7 +635,7 @@ class N2SEfficiencyModel:
                     'Total Financial Impact': total_financial_impact,
                     'Research Source': research_source
                 })
-        
+
         df = pd.DataFrame(impact_data)
         if not df.empty:
             df = df.sort_values('Total Financial Impact', ascending=True)
@@ -618,77 +654,79 @@ def calculate_role_based_hours(
 ) -> pd.DataFrame:
     """
     Calculate hours by role and phase with role-specific initiative multipliers
-    
+
     For baseline: distributes hours normally across roles.
     For modeled: applies role-specific multipliers to savings so different
     roles benefit differently from initiatives (e.g., PM saves less, DW Scribe saves more).
-    
+
     Args:
         phase_hours: Dict of phase -> total hours for that phase
         include_savings: If True, apply role-specific multipliers to modeled scenario
         initiative_impacts: Not used - kept for compatibility
         role_specific_multipliers: Dict of role_name -> multiplier for this scenario
-        
+
     Returns:
         DataFrame with roles as index, phases as columns
     """
     from config import (
         ROLE_DEFINITIONS, ROLE_PHASE_ALLOCATION, PHASE_ORDER
     )
-    
+
     # First, calculate the total "weight" each phase has from all roles
     phase_total_weights = {phase: 0.0 for phase in PHASE_ORDER}
-    
+
     for role_name, role_info in ROLE_DEFINITIONS.items():
         role_allocation = ROLE_PHASE_ALLOCATION.get(role_name, {})
         base_hours = role_info['base_hours']
-        
+
         for phase in PHASE_ORDER:
             if phase in role_allocation:
                 phase_pct = role_allocation[phase] / 100.0
                 phase_total_weights[phase] += base_hours * phase_pct
-    
+
     # Distribute phase hours across roles
     role_hours_data = {}
-    
+
     for role_name in ROLE_DEFINITIONS.keys():
         role_hours_data[role_name] = {}
         role_allocation = ROLE_PHASE_ALLOCATION.get(role_name, {})
         base_hours = ROLE_DEFINITIONS[role_name]['base_hours']
-        
+
         # Get role-specific multiplier (1.0 = standard savings)
         role_multiplier = 1.0
         if include_savings and role_specific_multipliers and role_name in role_specific_multipliers:
             role_multiplier = role_specific_multipliers[role_name]
-        
+
         for phase in PHASE_ORDER:
             if phase in phase_hours and phase in role_allocation:
                 phase_pct = role_allocation[phase] / 100.0
                 role_phase_weight = base_hours * phase_pct
-                
+
                 if phase_total_weights[phase] > 0:
                     role_share = role_phase_weight / phase_total_weights[phase]
-                    
+
                     # For modeled hours with role multipliers:
-                    # Apply additional adjustment based on role's benefit from initiatives
+                    # Apply additional adjustment based on role's benefit from
+                    # initiatives
                     if include_savings and role_multiplier != 1.0:
                         # Role gets more/less savings based on multiplier
                         # multiplier > 1.0 = more savings (fewer hours)
                         # multiplier < 1.0 = less savings (more hours)
-                        role_phase_hours = phase_hours[phase] * role_share * (2.0 - role_multiplier)
+                        role_phase_hours = phase_hours[phase] * \
+                            role_share * (2.0 - role_multiplier)
                     else:
                         role_phase_hours = phase_hours[phase] * role_share
                 else:
                     role_phase_hours = 0.0
-                
+
                 role_hours_data[role_name][phase] = role_phase_hours
             else:
                 role_hours_data[role_name][phase] = 0.0
-    
+
     # Convert to DataFrame
     df = pd.DataFrame(role_hours_data).T
     df = df[PHASE_ORDER]  # Ensure proper column order
-    
+
     return df
 
 
@@ -698,16 +736,16 @@ def calculate_role_initiative_multipliers(
 ) -> Dict[str, float]:
     """
     Calculate role-specific savings multipliers based on active initiatives
-    
+
     Args:
         maturity_levels: Dict of initiative_name -> maturity % (0-100)
         initiative_mapping: Optional mapping of model initiative names to multiplier keys
-        
+
     Returns:
         Dict of role_name -> weighted multiplier (weighted by initiative maturity)
     """
     from config import ROLE_DEFINITIONS, ROLE_INITIATIVE_MULTIPLIERS
-    
+
     # Map model initiative names to multiplier categories
     if initiative_mapping is None:
         initiative_mapping = {
@@ -723,18 +761,18 @@ def calculate_role_initiative_multipliers(
             'Preconfigured Envs': 'Reusable Components',
             'Integration Code Reuse': 'Reusable Components'
         }
-    
+
     # Calculate weighted multipliers for each role
     role_multipliers = {}
-    
+
     for role_name in ROLE_DEFINITIONS.keys():
         weighted_multiplier = 0.0
         total_weight = 0.0
-        
+
         for initiative_name, maturity_pct in maturity_levels.items():
             if maturity_pct > 0 and initiative_name in initiative_mapping:
                 multiplier_key = initiative_mapping[initiative_name]
-                
+
                 if multiplier_key in ROLE_INITIATIVE_MULTIPLIERS:
                     multipliers = ROLE_INITIATIVE_MULTIPLIERS[multiplier_key]
                     if role_name in multipliers:
@@ -742,35 +780,36 @@ def calculate_role_initiative_multipliers(
                         weight = maturity_pct / 100.0
                         weighted_multiplier += multipliers[role_name] * weight
                         total_weight += weight
-        
+
         # Average multiplier across active initiatives
         if total_weight > 0:
             role_multipliers[role_name] = weighted_multiplier / total_weight
         else:
-            role_multipliers[role_name] = 1.0  # No initiatives = no special multiplier
-    
+            # No initiatives = no special multiplier
+            role_multipliers[role_name] = 1.0
+
     return role_multipliers
 
 
 def calculate_role_based_costs(role_hours_df: pd.DataFrame) -> pd.DataFrame:
     """
     Calculate costs by role and phase using role-specific hourly rates
-    
+
     Args:
         role_hours_df: DataFrame with roles as index, phases as columns (hours)
-        
+
     Returns:
         DataFrame with roles as index, phases as columns (costs)
     """
     from config import ROLE_DEFINITIONS
-    
+
     role_costs_df = role_hours_df.copy()
-    
+
     for role_name in role_costs_df.index:
         if role_name in ROLE_DEFINITIONS:
             hourly_rate = ROLE_DEFINITIONS[role_name]['hourly_rate']
             role_costs_df.loc[role_name] = role_costs_df.loc[role_name] * hourly_rate
-    
+
     return role_costs_df
 
 
@@ -780,28 +819,31 @@ def get_role_summary(
 ) -> pd.DataFrame:
     """
     Generate summary comparison of baseline vs modeled hours by role
-    
+
     Args:
         baseline_role_hours: DataFrame of baseline hours by role and phase
         modeled_role_hours: DataFrame of modeled hours by role and phase
-        
+
     Returns:
         DataFrame with role-level summary statistics
     """
     from config import ROLE_DEFINITIONS
-    
+
     summary_data = []
-    
+
     for role_name in baseline_role_hours.index:
         baseline_total = baseline_role_hours.loc[role_name].sum()
         modeled_total = modeled_role_hours.loc[role_name].sum()
         hours_saved = baseline_total - modeled_total
-        pct_saved = (hours_saved / baseline_total * 100) if baseline_total > 0 else 0
-        
+        pct_saved = (
+            hours_saved /
+            baseline_total *
+            100) if baseline_total > 0 else 0
+
         role_info = ROLE_DEFINITIONS.get(role_name, {})
         hourly_rate = role_info.get('hourly_rate', 100)
         cost_saved = hours_saved * hourly_rate
-        
+
         summary_data.append({
             'Role': role_name,
             'Type': role_info.get('type', ''),
@@ -812,49 +854,50 @@ def get_role_summary(
             'Hourly Rate': hourly_rate,
             'Cost Savings': cost_saved
         })
-    
+
     summary_df = pd.DataFrame(summary_data)
     summary_df = summary_df.sort_values('Cost Savings', ascending=False)
-    
+
     return summary_df
 
 
 def get_phase_role_heatmap_data(role_hours_df: pd.DataFrame) -> pd.DataFrame:
     """
     Prepare role hours data for heatmap visualization
-    
+
     Args:
         role_hours_df: DataFrame with roles as index, phases as columns
-        
+
     Returns:
         Formatted DataFrame suitable for heatmap display
     """
     # Round hours for cleaner display
     heatmap_df = role_hours_df.round(0)
-    
+
     return heatmap_df
 
 
-def calculate_role_group_totals(role_hours_df: pd.DataFrame) -> Dict[str, float]:
+def calculate_role_group_totals(
+        role_hours_df: pd.DataFrame) -> Dict[str, float]:
     """
     Calculate total hours by role group (Pod vs Pooled)
-    
+
     Args:
         role_hours_df: DataFrame with roles as index, phases as columns
-        
+
     Returns:
         Dict with role group totals
     """
     from config import ROLE_DEFINITIONS
-    
+
     group_totals = {'Pod': 0.0, 'Pooled': 0.0}
-    
+
     for role_name in role_hours_df.index:
         if role_name in ROLE_DEFINITIONS:
             role_type = ROLE_DEFINITIONS[role_name]['type']
             role_total = role_hours_df.loc[role_name].sum()
             group_totals[role_type] += role_total
-    
+
     return group_totals
 
 
@@ -865,19 +908,19 @@ def calculate_savings_by_category(
 ) -> pd.DataFrame:
     """
     Calculate savings broken down by strategic category for each role
-    
+
     Args:
         baseline_role_hours: DataFrame of baseline hours by role and phase
         modeled_role_hours: DataFrame of modeled hours by role and phase
         maturity_levels: Dict of initiative_name -> maturity % (0-100)
-        
+
     Returns:
         DataFrame with roles as index, categories as columns showing hours saved per category
     """
     from config import (
         ROLE_DEFINITIONS, SAVINGS_CATEGORY_MAPPING, SAVINGS_CATEGORIES
     )
-    
+
     # Calculate total savings per role
     role_savings = {}
     for role_name in baseline_role_hours.index:
@@ -885,38 +928,42 @@ def calculate_savings_by_category(
         modeled_total = modeled_role_hours.loc[role_name].sum()
         total_saved = baseline_total - modeled_total
         role_savings[role_name] = total_saved
-    
-    # Allocate savings to categories based on initiative maturity and category mapping
-    category_savings = {role: {cat: 0.0 for cat in SAVINGS_CATEGORIES.keys()} 
-                       for role in baseline_role_hours.index}
-    
+
+    # Allocate savings to categories based on initiative maturity and category
+    # mapping
+    category_savings = {role: {cat: 0.0 for cat in SAVINGS_CATEGORIES.keys()}
+                        for role in baseline_role_hours.index}
+
     # Calculate total weighted maturity across all initiatives
     total_maturity_weight = sum(maturity_levels.values())
-    
+
     if total_maturity_weight > 0:
         for initiative_name, maturity_pct in maturity_levels.items():
             if maturity_pct > 0 and initiative_name in SAVINGS_CATEGORY_MAPPING:
                 # Weight of this initiative
                 initiative_weight = maturity_pct / total_maturity_weight
-                
+
                 # Allocate this initiative's contribution to categories
                 category_allocation = SAVINGS_CATEGORY_MAPPING[initiative_name]
-                
+
                 for role_name in baseline_role_hours.index:
                     role_total_savings = role_savings[role_name]
                     initiative_role_savings = role_total_savings * initiative_weight
-                    
+
                     # Distribute across categories per initiative mapping
                     for category, pct in category_allocation.items():
                         category_savings[role_name][category] += initiative_role_savings * pct
-    
+
     # Convert to DataFrame
     df = pd.DataFrame(category_savings).T
-    
+
     # Reorder columns by category
-    category_order = ['OOtB Config', 'N2S Methodology & Controls', 'AI & Automation']
+    category_order = [
+        'OOtB Config',
+        'N2S Methodology & Controls',
+        'AI & Automation']
     df = df[[col for col in category_order if col in df.columns]]
-    
+
     return df
 
 
@@ -927,28 +974,31 @@ def get_category_savings_summary(
 ) -> pd.DataFrame:
     """
     Generate summary table with role info and category breakdown
-    
+
     Args:
         category_savings_df: DataFrame of savings by category from calculate_savings_by_category
         baseline_role_hours: Baseline hours by role
         modeled_role_hours: Modeled hours by role
-        
+
     Returns:
         DataFrame with comprehensive role and category information
     """
     from config import ROLE_DEFINITIONS
-    
+
     summary_data = []
-    
+
     for role_name in category_savings_df.index:
         baseline_total = baseline_role_hours.loc[role_name].sum()
         modeled_total = modeled_role_hours.loc[role_name].sum()
         total_saved = baseline_total - modeled_total
-        pct_saved = (total_saved / baseline_total * 100) if baseline_total > 0 else 0
-        
+        pct_saved = (
+            total_saved /
+            baseline_total *
+            100) if baseline_total > 0 else 0
+
         role_info = ROLE_DEFINITIONS.get(role_name, {})
         hourly_rate = role_info.get('hourly_rate', 100)
-        
+
         row = {
             'Role': role_name,
             'Type': role_info.get('type', ''),
@@ -963,9 +1013,8 @@ def get_category_savings_summary(
             'Total Cost Saved': total_saved * hourly_rate
         }
         summary_data.append(row)
-    
+
     df = pd.DataFrame(summary_data)
     df = df.sort_values('Total Cost Saved', ascending=False)
-    
-    return df
 
+    return df
