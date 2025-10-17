@@ -10,7 +10,7 @@ from typing import Dict, Tuple
 # =============================================================================
 
 # Version tracking for deployment verification
-APP_VERSION = "v4.2.0 - Final: 25% Target with Operational Efficiency Component (Oct 17, 2025)"
+APP_VERSION = "v4.3.0 - Recalibrated for Realistic Maturity Mix (Oct 17, 2025)"
 
 # Default project parameters
 DEFAULT_TOTAL_HOURS = 17054

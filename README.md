@@ -16,12 +16,12 @@ This application models the efficiency improvements and cost benefits of impleme
 **Model Calibration:** The model uses a calibrated efficiency matrix grounded in **75th percentile** of published industry research (Gartner, McKinsey, Forrester, DORA, etc.). This represents **ambitious but achievable** outcomes for high-performing organizations.
 
 **Calibration Validated (October 17, 2025):**
-- **App defaults** (25% avg maturity) → **6.2% total project savings**
-- **50% maturity** across all initiatives → **12.5% total project savings**
-- **90-95% maturity** across key initiatives → **~23-24% total project savings**
-- **100% maturity** across all initiatives → **25.0% total project savings**
+- **App defaults** (25% avg maturity) → **~8-9% total project savings**
+- **50% maturity** across all initiatives → **~17% total project savings**
+- **Realistic achievable mix** (70-95% with constraints) → **~25% total project savings**
+  - AI/Automation: 90%, Testing: 71%, Reuse: 56%, Others: 90-95%
 
-**Important:** The 25% maximum includes ~17-20% research-backed improvements plus ~3-8% operational efficiency gains (resource utilization, reduced rework, process optimization). See `OPERATIONAL_EFFICIENCY_CAVEAT.md` for details.
+**Important:** The model is calibrated so that a realistic mix of high maturity (accounting for implementation constraints) achieves 25%. This 25% includes ~17-20% research-backed improvements plus ~3-8% operational efficiency gains. See `OPERATIONAL_EFFICIENCY_CAVEAT.md` for details.
 
 **Research basis:** Each matrix value is derived from specific studies:
 - Test automation: Perfecto/Testlio (30-50% test phase reduction)

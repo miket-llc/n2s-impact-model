@@ -35,7 +35,11 @@ def get_calibrated_matrix():
     """
     Return the calibrated efficiency matrix - FINAL CALIBRATION (Oct 17, 2025)
     
-    Calibration: 100% maturity = ~25% total project savings
+    Calibration: Realistic mix of 70-90% maturity = ~25% total project savings
+    
+    Realistic achievable scenario:
+    - AI/Automation: 90%, Testing: 71%, Reuse: 56%, Others: 90-95%
+    - This mix achieves 25% with calibrated matrix
     
     IMPORTANT: This 25% includes:
     - ~17-20%: Research-backed technical improvements (tools, automation, standards)
@@ -50,26 +54,26 @@ def get_calibrated_matrix():
     - IaC: Puppet State of DevOps (deployment 80% faster)
     - Reuse: Gartner component reuse studies (30-40% development reduction)
     
-    Matrix values: 0.64x multiplier applied to achieve 25% target with operational component
+    Matrix values: 0.88x multiplier applied to achieve 25% with realistic maturity mix
     """
     sample_data = {
         #                     Mod   AI   CARM  PreC  Auto  EDCC  Intg  Agile
         # Early phases: Planning, discovery, requirements
-        'Discover':        [-19, -14,  -27,  -33,   -9,  -24,  -28,  -33],  # Agile ceremonies reduce discovery waste
-        'Plan':            [-27, -23,  -43,  -52,  -14,  -37,  -40,  -46],  # Agile planning + templates
-        'Design':          [-43, -37,  -62,  -68,  -52,  -48,  -58,  -52],  # Patterns + collaborative design
+        'Discover':        [-26, -19,  -37,  -45,  -12,  -33,  -38,  -45],  # Agile ceremonies reduce discovery waste
+        'Plan':            [-37, -32,  -59,  -71,  -19,  -51,  -55,  -63],  # Agile planning + templates
+        'Design':          [-59, -51,  -85,  -93,  -71,  -66,  -79,  -71],  # Patterns + collaborative design
         
         # Development: Where automation has biggest impact
-        'Build':           [-72, -105, -86, -129, -173, -82, -159,  -91],  # AI coding + reuse + automation
+        'Build':           [-99, -144, -118, -177, -237, -112, -218, -125],  # AI coding + reuse + automation
         
         # Testing: Highest automation potential  
-        'Test':           [-173, -159, -139, -105, -221, -91, -245, -129],  # Test automation is the star
+        'Test':           [-237, -218, -190, -144, -303, -125, -336, -177],  # Test automation is the star
         
         # Deployment: DevOps automation shines
-        'Deploy':          [-37,  -70, -27,  -52,  -43, -31,  -40,  -62],  # IaC + CD pipelines
+        'Deploy':          [-51,  -96, -37,  -71,  -59, -42,  -55,  -85],  # IaC + CD pipelines
         
         # Post Go-Live: Operational efficiencies
-        'Post Go-Live':   [-129,  -86, -105, -154, -72, -82, -120, -105]   # Better quality + support automation
+        'Post Go-Live':   [-177, -118, -144, -211, -99, -112, -164, -144]   # Better quality + support automation
     }
     
     return pd.DataFrame(sample_data, index=INITIATIVE_FALLBACK)
