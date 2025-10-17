@@ -309,7 +309,7 @@ The N2S Impact Model calculates **potential** professional services efficiency g
 
 **A:**
 
-"The model is transparent—actual results depend on execution. At 50% maturity across initiatives, we expect 12.5% savings. At 75% maturity, we expect ~19%. The 25% requires near-perfect execution (90-95% maturity minimum). The model helps us plan what level of investment and execution is needed to hit targets. It's a planning tool, not a guarantee."
+"The model is transparent—actual results depend on execution. At 50% maturity across initiatives, we expect 14.9% savings. At 75% maturity, we expect ~22%. The 25% requires near-perfect execution (90-95% maturity minimum). The model helps us plan what level of investment and execution is needed to hit targets. It's a planning tool, not a guarantee."
 
 ### Q: "How do you know the strategic split is correct?"
 
@@ -328,7 +328,7 @@ The N2S Impact Model calculates **potential** professional services efficiency g
 
 - Uses 75th percentile of research (not 95th percentile outliers)
 
-- 6.2% at low maturity is below CMMI Level 2 expectations (8-12%)
+- 7.4% at low maturity is below CMMI Level 2 expectations (8-12%)
 
 - Linear scaling is transparent and defensible
 

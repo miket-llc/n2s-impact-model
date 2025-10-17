@@ -6,9 +6,9 @@ This document outlines the research-based assumptions, industry benchmarks, and 
 
 ## 🔄 NEW: Explicit Baseline Definition
 
-The model now explicitly defines the "baseline" as a **typical mid-maturity enterprise** software delivery organization:
+The model now explicitly defines the "baseline" as a **typical Banner client starting point**:
 
-- **Manual regression testing:** 70% manual, 30% automated unit tests
+- **Manual regression testing:** 100% manual (no automated testing frameworks)
 - **Basic CI/CD:** Automated builds, manual deployments  
 - **Custom integrations:** Minimal code reuse (<10%)
 - **Manual environment setup:** Some scripting, mostly manual (2-4 days per environment)
@@ -17,7 +17,7 @@ The model now explicitly defines the "baseline" as a **typical mid-maturity ente
 - **Standard defect rates:** 2-5 defects per 1000 LOC
 - **No comprehensive reuse:** Each project builds most components from scratch
 
-This baseline represents approximately **CMMI Level 2-3** maturity.
+This baseline represents approximately **CMMI Level 1-2** maturity.
 
 ## 🆕 NEW: How Savings Are Calculated
 
