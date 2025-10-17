@@ -1,6 +1,6 @@
 # N2S Impact Model: Professional Services Efficiency Calculator
 
-**Executive Summary:** Interactive financial modeling tool that quantifies cost savings and efficiency gains from Ellucian's Navigate-to-SaaS (N2S) delivery methodology. **Validated to deliver 25% project cost reduction** at full maturity with research-backed calculations.
+**Executive Summary:** Interactive financial modeling tool that quantifies **potential** cost savings and efficiency gains from Ellucian's Navigate-to-SaaS (N2S) delivery methodology. **Model calculates up to 25% project cost reduction** at high maturity levels with research-backed calculations.
 
 ---
 
@@ -10,19 +10,21 @@
 - **Conservative Scenario (25% maturity):** $1.3M savings (7.4% reduction)
 - **Moderate Scenario (50% maturity):** $2.5M savings (14.9% reduction)  
 - **Target Scenario (90%+ maturity):** $4.3M savings (25% reduction)
-- **Maximum Scenario (100% maturity):** $5.1M savings (29.7% reduction)
+- **Theoretical Maximum (100% maturity):** $5.1M savings (29.7% reduction) *[Note: 100% maturity is not realistically achievable]*
 
 ### ROI Timeline
 - **Implementation Investment:** 3-6 months (training, tools, process changes)
-- **Break-even:** Project 2-3 (savings exceed implementation costs)
-- **Annual Run-rate Savings:** $2-4M per project after maturity
+- **Payback Period:** Depends on project frequency and implementation success
+- **Ongoing Benefits:** Savings realized on each project after maturity is achieved
+
+*Note: Actual ROI depends on project frequency, implementation success, and organizational adoption.*
 
 ---
 
 ## 📊 Model Validation & Research Foundation
 
 ### Calibration Methodology
-The model uses **75th percentile** of published industry research, representing ambitious but achievable outcomes for high-performing organizations:
+The model uses **upper quartile** of published industry research ranges, representing ambitious but achievable outcomes for high-performing organizations. This approach is conservative compared to outlier case studies but optimistic compared to average implementations.
 
 | Initiative | Research Source | Max Benefit | Model Calibration |
 |------------|----------------|-------------|-------------------|
@@ -57,14 +59,14 @@ The model uses **75th percentile** of published industry research, representing 
 ### Risk Assessment
 - **Implementation Risk:** Weighted by phase complexity (1x to 7x multipliers)
 - **Maturity Risk:** Linear scaling (50% maturity = 50% of max benefit)
-- **Validation:** Model caps at 50% total reduction (industry maximum)
+- **Model Limitations:** Results depend on execution quality and organizational adoption
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.8+
+- Python 3.8+ 
 - Modern web browser (Chrome recommended)
 
 ### Quick Start
@@ -101,8 +103,8 @@ streamlit run app.py
 
 ### Step 2: Financial Configuration
 **Project Parameters:**
-- Total project hours (default: 17,054)
-- Blended labor rate (default: $100/hour)
+   - Total project hours (default: 17,054)
+   - Blended labor rate (default: $100/hour)
 - Phase allocation percentages (must sum to 100%)
 
 **Target Setting:**
@@ -186,10 +188,10 @@ streamlit run app.py
 *These operational gains are proportionally distributed across the three strategic categories.*
 
 ### Conservative Positioning
-- Uses 75th percentile of research (not outlier case studies)
+- Uses upper quartile of research ranges (not outlier case studies)
 - Linear scaling (no exponential assumptions)
-- Industry maximum cap at 50% total reduction
 - Transparent methodology with auditable calculations
+- **Honest Assessment:** Results depend heavily on execution quality and organizational adoption
 
 ### Key Model Assumptions
 
@@ -240,6 +242,8 @@ streamlit run app.py
 - **Timeline:** No modeling of implementation sequencing or learning curves
 - **Context:** Generic model may not reflect organization-specific factors
 - **Guarantees:** Results depend on execution quality and organizational maturity
+- **Reality Check:** 100% maturity is not achievable; realistic maximum is 70-90% for most initiatives
+- **Research Limitations:** Studies may not reflect your specific environment or constraints
 
 ### Use Cases
 **Appropriate for:**

@@ -14,7 +14,7 @@
 
 ## Executive Summary
 
-The N2S Impact Model quantifies professional services efficiency gains at **25% maximum** (100% initiative maturity) using research-grounded calculations.
+The N2S Impact Model calculates **potential** professional services efficiency gains up to **25%** (at high maturity levels) using research-grounded calculations.
 
 
 **Savings by Maturity Level:**
@@ -25,7 +25,7 @@ The N2S Impact Model quantifies professional services efficiency gains at **25% 
 
 - **25.0%** at realistic achievable mix (70-95% maturity) - Target scenario
 
-- **29.7%** at 100% maturity - Maximum theoretical execution
+- **29.7%** at 100% maturity - Theoretical maximum (not realistically achievable)
 
 
 **Strategic Breakdown (~43/32/26):**
@@ -55,7 +55,7 @@ The N2S Impact Model quantifies professional services efficiency gains at **25% 
 
 | **75%** | **22.3%** | Strong execution |
 
-| **100%** | **29.7%** | Maximum theoretical execution |
+| **100%** | **29.7%** | Theoretical maximum (not realistically achievable) |
 
 | **Realistic Mix** | **25.0%** | Target scenario (AI 90%, Testing 71%, Reuse 56%, Others 90-95%) |
 
