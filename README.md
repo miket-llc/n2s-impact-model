@@ -6,11 +6,11 @@
 
 ## 🎯 Business Value Proposition
 
-### Financial Impact (Typical $17M Project)
-- **Conservative Scenario (25% maturity):** $1.3M savings (7.4% reduction)
-- **Moderate Scenario (50% maturity):** $2.5M savings (14.9% reduction)  
-- **Target Scenario (90%+ maturity):** $4.3M savings (25% reduction)
-- **Theoretical Maximum (100% maturity):** $5.1M savings (29.7% reduction) *[Note: 100% maturity is not realistically achievable]*
+### Financial Impact (Typical $1.7M Project)
+- **Conservative Scenario (25% maturity):** $126K savings (7.4% reduction)
+- **Moderate Scenario (50% maturity):** $254K savings (14.9% reduction)  
+- **Target Scenario (90%+ maturity):** $425K savings (25% reduction)
+- **Theoretical Maximum (100% maturity):** $506K savings (29.7% reduction) *[Note: 100% maturity is not realistically achievable]*
 
 ### ROI Timeline
 - **Implementation Investment:** 3-6 months (training, tools, process changes)

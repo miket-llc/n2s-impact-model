@@ -64,7 +64,7 @@ The N2S Impact Model calculates **potential** professional services efficiency g
 
 **At 100% Maturity:**
 
-- **Methodology & Controls: 42.5%** ($181,178 on $17M project)
+- **Methodology & Controls: 42.5%** ($18,118 on $1.7M project)
 
   - EDCC governance: 80% methodology
 
@@ -73,7 +73,7 @@ The N2S Impact Model calculates **potential** professional services efficiency g
   - Agile/DevOps: 70% methodology
 
 
-- **OOtB Configuration: 31.6%** ($134,817)
+- **OOtB Configuration: 31.6%** ($13,482)
 
   - Preconfigured environments: 65% OOtB
 
@@ -82,7 +82,7 @@ The N2S Impact Model calculates **potential** professional services efficiency g
   - Modernization Studio templates: 50% OOtB
 
 
-- **AI & Automation: 25.9%** ($110,305)
+- **AI & Automation: 25.9%** ($11,031)
 
   - Automated testing: 55% AI/automation
 
